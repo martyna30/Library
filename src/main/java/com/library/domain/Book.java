@@ -6,6 +6,8 @@ import org.springframework.lang.NonNull;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class Book {
         return id;
     }
 
+    @NotBlank
+    @Size(min=3)
     @Column
     public String getTitle() {
         return title;
@@ -40,6 +44,8 @@ public class Book {
         return yearOfPublication;
     }
 
+    @NotBlank
+    @Size(min=1)
     @Column
     public String getSignature() {
         return signature;
