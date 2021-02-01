@@ -28,7 +28,7 @@ dependencies {
     //mySql
     //compile 'mysql:mysql-connector-java'
 
-    compile ('org.postgresql:postgresql')
+    //compile ('org.postgresql:postgresql')
     //lombok
     compileOnly('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
@@ -40,6 +40,11 @@ dependencies {
 
     //tomcat dostarczony z zewnątrz
     //providedRuntime ("org.springframework.boot:spring-boot-starter-tomcat")
+
+    //testy
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    runtimeOnly('com.h2database:h2')
+    runtimeOnly('com.h2database:h2')
 
 }
 

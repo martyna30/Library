@@ -23,6 +23,10 @@ public class Book {
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
 
+    public Book(String title, String signature) {
+        this.title = title;
+        this.signature = signature;
+    }
 
     @Id
     @GeneratedValue

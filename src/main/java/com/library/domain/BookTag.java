@@ -2,9 +2,10 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
+
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +18,19 @@ public class BookTag {
     private String literaryGenre;
     private List<Book> books = new ArrayList<>();
 
+    public BookTag(String literaryGenre) {
+        this.literaryGenre = literaryGenre;
+    }
+
     @Id
     @GeneratedValue
-    @NonNull
+    @NotNull
     @Column(name = "BOOK_TAG_ID", unique = true)
     public Long getId() {
         return id;
     }
 
+    @NotNull
     @Column
     public String getLiteraryGenre() {
         return literaryGenre;

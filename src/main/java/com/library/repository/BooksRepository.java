@@ -1,6 +1,7 @@
 package com.library.repository;
 
 import com.library.domain.Book;
+import com.library.domain.bn.BnBook;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,9 @@ public interface BooksRepository extends CrudRepository<Book, Long> {//. Wewnąt
 
         @Override
         long count();
+
+        @Override
+        <S extends Book> Iterable<S> saveAll(Iterable<S> entities);
 }
 
 

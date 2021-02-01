@@ -2,9 +2,9 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,26 +18,33 @@ public class Author {
     private String forename;
     private List<Book> books = new ArrayList<>();
 
+    public Author(String surname, String forename) {
+        this.surname = surname;
+        this.forename = forename;
+    }
+
     @Id
     @GeneratedValue
-    @NonNull
+    @NotNull
     @Column(name = "AUTHOR_ID", unique = true)
     public Long getId() {
         return id;
     }
 
+    @NotNull
     @Column
     public String getSurname() {
         return surname;
     }
 
+    @NotNull
     @Column
     public String getForename() {
         return forename;
     }
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name ="JOIN_BOOK_AUTHORS",
             joinColumns ={@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "AUTHOR_ID")},
