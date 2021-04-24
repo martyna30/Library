@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class BnConfig {
     @Value("${bn.api.endpoint.prod}")
     private String BnApiEndpoint;
+
 }

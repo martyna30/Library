@@ -18,10 +18,13 @@ public class Author {
     private String forename;
     private List<Book> books = new ArrayList<>();
 
-    public Author(String surname, String forename) {
+    public Author(Long id, String surname, String forename) {
+        this.id = id;
         this.surname = surname;
         this.forename = forename;
     }
+
+
 
     @Id
     @GeneratedValue
@@ -38,7 +41,7 @@ public class Author {
     }
 
     @NotNull
-    @Column
+    @Column(name = "FORENAME")
     public String getForename() {
         return forename;
     }

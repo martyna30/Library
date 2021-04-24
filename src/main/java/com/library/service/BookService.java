@@ -29,9 +29,6 @@ public class BookService {
         booksRepository.deleteById(id);
     }
 
-    public void deleteAll() {
-        booksRepository.deleteAll();
 
-    }
 }
 

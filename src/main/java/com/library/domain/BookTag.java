@@ -18,7 +18,8 @@ public class BookTag {
     private String literaryGenre;
     private List<Book> books = new ArrayList<>();
 
-    public BookTag(String literaryGenre) {
+    public BookTag(Long id, String literaryGenre) {
+        this.id = id;
         this.literaryGenre = literaryGenre;
     }
 
@@ -31,7 +32,7 @@ public class BookTag {
     }
 
     @NotNull
-    @Column
+    @Column(name = "LITERARY_GENRE")
     public String getLiteraryGenre() {
         return literaryGenre;
     }
@@ -45,6 +46,7 @@ public class BookTag {
     public List<Book> getBooks() {
         return books;
     }
+
 
     public void setId(Long id) {
         this.id = id;

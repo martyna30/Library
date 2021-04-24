@@ -19,6 +19,8 @@ public class BookDto {
     private String title;
     private int yearOfPublication;
     private String signature;
+    private int amountOfbook;
+    private int amountOfborrowed;
     private List<BookTagDto> booksTag = new ArrayList<>();
     private List<AuthorDto> authors = new ArrayList<>();
 

@@ -1,8 +1,11 @@
 package com.library.repository;
 
+import com.library.domain.Author;
 import com.library.domain.Book;
-import com.library.domain.bn.BnBook;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -29,8 +32,17 @@ public interface BooksRepository extends CrudRepository<Book, Long> {//. Wewnąt
         @Override
         long count();
 
-        @Override
-        <S extends Book> Iterable<S> saveAll(Iterable<S> entities);
+        /*@Query(nativeQuery = true)
+        List<Book> retrieveBookWithParticularAuthor(@Param("FORENAME")String forename);*/
+
+        //@Query
+        //List<Book> retrieveBookWithParticularAuthor(@Param("FORENAME")String forename);
+
+        //@Query
+        //List<Book> retrieveBookWithParticularTitle(@Param("TITLE") String title );
+
+        //@Query
+        //List<Book> retrieveBookWithParticularGenre(@Param("LITERARY_GENRE") String literaryGenre);
 }
 
 

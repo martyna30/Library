@@ -56,11 +56,11 @@ public class BookServiceTest {
         brzechwa.getBooks().add(kaczka_Dziwaczka);
         pratchett.getBooks().add(makbet);
 
-        makbet.getBookTag().add(fiction);
-        makbet.getBookTag().add(thriller);
-        kaczka_Dziwaczka.getBookTag().add(fantasy);
-        romeoAndJuliet.getBookTag().add(thriller);
-        romeoAndJuliet.getBookTag().add(fiction);
+        makbet.getBookTags().add(fiction);
+        makbet.getBookTags().add(thriller);
+        kaczka_Dziwaczka.getBookTags().add(fantasy);
+        romeoAndJuliet.getBookTags().add(thriller);
+        romeoAndJuliet.getBookTags().add(fiction);
 
         fiction.getBooks().add(makbet);
         fiction.getBooks().add(romeoAndJuliet);
@@ -77,7 +77,7 @@ public class BookServiceTest {
         long book2Id = kaczka_Dziwaczka.getId();
         long book3Id = romeoAndJuliet.getId();
 
-        long bookTag1Id = makbet.getBookTag().get(0).getId();
+        long bookTag1Id = makbet.getBookTags().get(0).getId();
         long author1Id = kaczka_Dziwaczka.getAuthors().get(0).getId();
 
         List<Book> bookList = bookService.getAllBooks();

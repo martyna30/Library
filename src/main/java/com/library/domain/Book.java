@@ -2,7 +2,7 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 
 import javax.persistence.*;
@@ -11,6 +11,42 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hibernate.sql.ast.Clause.LIMIT;
+import static org.springframework.http.HttpHeaders.FROM;
+
+
+/*
+@NamedNativeQuery(
+        name = "Book.retrieveBookWithParticularAuthor",
+        query = "SELECT * FROM BOOK AS B " +
+                "WHERE EXISTS( " +
+                "SELECT * FROM JOIN_BOOK_AUTHORS AS BookAuthor JOIN AUTHOR AS A ON BookAuthor.AUTHOR_ID = A.AUTHOR_ID " +
+                "WHERE BookAuthor.BOOK_ID = B.BOOK_ID AND A.forename LIKE :FORENAME LIMIT 1)",
+        resultClass = Book.class
+)*/
+/*/@NamedQueries({
+
+        @NamedQuery(
+        name = "Book.retrieveBookWithParticularAuthor",
+        query = "FROM BOOK AS B " +
+                    "WHERE EXISTS( " +
+                        "FROM JOIN_BOOK_AUTHORS AS BookAuthor JOIN AUTHOR AS A ON BookAuthor.AUTHOR_ID = A.AUTHOR_ID " +
+                        "WHERE BookAuthor.BOOK_ID = B.BOOK_ID AND A.forename LIKE :FORENAME LIMIT 1)"
+        ),
+        @NamedQuery(
+                name = "Book.retrieveBookWithParticularTitle",
+                        query = "FROM BOOK WHERE title LIKE :TITLE LIMIT 1"
+        ),
+
+        @NamedQuery(
+                name = "Book.retrieveBookWithParticularGenre",
+                query = "FROM book AS B " +
+                            "WHERE EXISTS( " +
+                                "FROM join_book_tags AS BookTags JOIN book_tag AS Tag ON BookTags.book_tag_id = Tag.book_tag_id" +
+                                " WHERE BookTags.book_id = B.book_id AND Tag.literary_genre LIKE :LITERARY_GENRE )"
+        )
+
+})*/
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -20,6 +56,8 @@ public class Book {
     private String title;
     private int yearOfPublication;
     private String signature;
+    private int amountOfbook;
+    private int amountOfborrowed;
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
 
@@ -28,9 +66,19 @@ public class Book {
         this.signature = signature;
     }
 
+    public Book(Long id, int yearOfPublication, String signature, List<BookTag> bookTagsList, List<Author> authorsList) {
+        this.id = id;
+        this.yearOfPublication = yearOfPublication;
+        this.signature = signature;
+        this.bookTags = bookTagsList;
+        this.authors = authorsList;
+    }
+
+
+
     @Id
     @GeneratedValue
-    @NonNull
+    @NotNull
     @Column(name = "BOOK_ID", unique = true)
     public Long getId() {
         return id;
@@ -38,7 +86,7 @@ public class Book {
 
     @NotBlank
     @Size(min=3)
-    @Column
+    @Column(name = "TITLE")
     public String getTitle() {
         return title;
     }
@@ -55,10 +103,18 @@ public class Book {
         return signature;
     }
 
+    public int getAmountOfbook() {
+        return amountOfbook;
+    }
+
+    public int getAmountOfborrowed() {
+        return amountOfborrowed;
+    }
+
     @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "books", fetch = FetchType.LAZY)
     ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
     // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
-    public List<BookTag> getBookTag() {
+    public List<BookTag> getBookTags() {
         return bookTags;
     }
 
@@ -83,7 +139,15 @@ public class Book {
         this.signature = signature;
     }
 
-    public void setBookTag(List<BookTag> bookTags) {
+    public void setAmountOfbook(int amountOfbook) {
+        this.amountOfbook = amountOfbook;
+    }
+
+    public void setAmountOfborrowed(int amountOfborrowed) {
+        this.amountOfborrowed = amountOfborrowed;
+    }
+
+    public void setBookTags(List<BookTag> bookTags) {
         this.bookTags = bookTags;
     }
 

@@ -9,22 +9,24 @@ import com.library.bn.converter.StringToArrayConverter;
 import com.library.bn.converter.StringToIntConverter;
 import com.library.domain.AuthorDto;
 import com.library.domain.BookTagDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BnBookDto {
+public class ExternalResponseBookDto {  //klasna na ktorą mapujue odpowidz
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("title")
-    private String title;
+    //@JsonProperty("title")
+    //private String title;
 
     @JsonDeserialize(converter = StringToIntConverter.class)
     @JsonProperty("publicationYear")

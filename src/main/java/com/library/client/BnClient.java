@@ -1,7 +1,9 @@
 package com.library.client;
 
 import com.library.bn.config.BnConfig;
-import com.library.domain.bn.BnBookDto;
+import com.library.domain.bn.ExternalResponseBookDto;
+import com.library.domain.bn.ExternalRequestBookDto;
+import com.library.domain.bn.ExternalResponseBookListDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 
@@ -31,31 +31,32 @@ public class BnClient {
     @Autowired
     BnConfig bnConfig;
 
-    public BnBookDto getBookFromBn() {
-        URI url = UriComponentsBuilder.fromHttpUrl(bnConfig.getBnApiEndpoint())
+    /*public ExternalResponseBookDto getBookFromBn(ExternalRequestBookDto externalRequestBookDto) {
+        URI url = UriComponentsBuilder.fromHttpUrl(bnConfig.getBnApiEndpoint()).queryParam("title", externalRequestBookDto.getTitle())
                 .build().encode().toUri();
 
-
         try {
-            BnBookDto bnBookDtoResponse = restTemplate.getForObject(url, BnBookDto.class);
-            System.out.println(bnBookDtoResponse);
-            return  bnBookDtoResponse;
+            ExternalResponseBookDto externalResponseBookDtoResponse = restTemplate.getForObject(url, ExternalResponseBookDto.class);
+            System.out.println(externalResponseBookDtoResponse);
+            return externalResponseBookDtoResponse;
 
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(),e);
-            return this.getBookFromBn();
-        }
+            return new ExternalResponseBookDto();
+        }*/
 
-    }
 
-    public List<BnBookDto> getBooksFromBn() {
+
+    public List<ExternalResponseBookDto> getBooksFromBn(ExternalRequestBookDto externalRequestBookDto) {
         URI url = UriComponentsBuilder.fromHttpUrl(bnConfig.getBnApiEndpoint())
+                .queryParam("title", externalRequestBookDto.getTitle())
                 .build().encode().toUri();
 
         try {
-            BnBookDto[] bnBookDtoResponse = restTemplate.getForObject(url, BnBookDto[].class);
-            System.out.println(bnBookDtoResponse);
-            return Arrays.asList(ofNullable(bnBookDtoResponse).orElse(new BnBookDto[0]));
+            ExternalResponseBookListDto[] externalResponseBookListDto = restTemplate.getForObject(url, ExternalResponseBookListDto[].class);
+            System.out.println(externalResponseBookListDto);
+            return new ArrayList<>();
+            //return Arrays.asList(ofNullable(ExternalResponseBookDto).orElse(new ExternalResponseBookDto[0]));
 
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(),e);

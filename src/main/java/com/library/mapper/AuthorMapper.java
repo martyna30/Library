@@ -7,6 +7,7 @@ import com.library.domain.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,8 @@ public class AuthorMapper {
         return new Author(
                 authorDto.getId(),
                 authorDto.getSurname(),
-                authorDto.getForename(),
-                bookMapper.mapToBookList(authorDto.getBooks())
+                authorDto.getForename()
+                //bookMapper.mapToBookList(authorDto.getBooks())
         );
     }
 
@@ -28,8 +29,8 @@ public class AuthorMapper {
         return new AuthorDto(
                 author.getId(),
                 author.getSurname(),
-                author.getForename(),
-                bookMapper.mapToBookDtoList(author.getBooks())
+                author.getForename()
+                //bookMapper.mapToBookDtoList(author.getBooks())
         );
     }
 
@@ -38,8 +39,8 @@ public class AuthorMapper {
                 .map(authorDto-> new Author(
                         authorDto.getId(),
                         authorDto.getSurname(),
-                        authorDto.getForename(),
-                        bookMapper.mapToBookList(authorDto.getBooks())))
+                        authorDto.getForename()))
+                        //bookMapper.mapToBookList(authorDto.getBooks())))
                 .collect(Collectors.toList());
     }
 
@@ -48,8 +49,8 @@ public class AuthorMapper {
                 .map(author-> new AuthorDto(
                         author.getId(),
                         author.getSurname(),
-                        author.getForename(),
-                        bookMapper.mapToBookDtoList(author.getBooks())))
+                        author.getForename()))
+
                 .collect(Collectors.toList());
     }
 }
