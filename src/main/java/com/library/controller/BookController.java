@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @CrossOrigin(origins = "*")
@@ -46,4 +47,6 @@ public class BookController {
     public void createBook(@RequestBody BookDto bookDto) {
         bookService.saveBook(bookMapper.mapToBook(bookDto));
     }
+
+
 }

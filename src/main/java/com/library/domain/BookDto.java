@@ -21,7 +21,7 @@ public class BookDto {
     private String signature;
     private int amountOfbook;
     private int amountOfborrowed;
-    private List<BookTagDto> booksTag = new ArrayList<>();
+    private List<BookTagDto> bookTags = new ArrayList<>();
     private List<AuthorDto> authors = new ArrayList<>();
 
 }

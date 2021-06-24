@@ -75,17 +75,15 @@ public class Book {
     }
 
 
-
     @Id
-    @GeneratedValue
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOOK_ID", unique = true)
     public Long getId() {
         return id;
     }
 
-    @NotBlank
-    @Size(min=3)
+
+    //@Size(min= 3, max = 30)
     @Column(name = "TITLE")
     public String getTitle() {
         return title;
@@ -96,9 +94,9 @@ public class Book {
         return yearOfPublication;
     }
 
-    @NotBlank
-    @Size(min=1)
-    @Column
+    //@NotNull
+    //@Size(min = 3, max = 8)
+   // @Column(unique = true)
     public String getSignature() {
         return signature;
     }
@@ -111,19 +109,32 @@ public class Book {
         return amountOfborrowed;
     }
 
-    @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "books", fetch = FetchType.LAZY)
+
     ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
     // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+
+            name ="JOIN_BOOK_TAGS",
+            joinColumns ={@JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "BOOK_TAG_ID", referencedColumnName = "BOOK_TAG_ID")}
+    )
     public List<BookTag> getBookTags() {
         return bookTags;
     }
 
-    @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "books", fetch = FetchType.LAZY)
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})  //, CascadeType.PERSIST
+        @JoinTable(
+            name ="JOIN_BOOK_AUTHORS",
+            joinColumns = {@JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID")},
+            inverseJoinColumns ={@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "AUTHOR_ID")}
+    )
     public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) { //nie nalezy zmieniac id i udostepniac setera
         this.id = id;
     }
 

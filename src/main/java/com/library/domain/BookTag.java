@@ -18,14 +18,17 @@ public class BookTag {
     private String literaryGenre;
     private List<Book> books = new ArrayList<>();
 
+    public BookTag(String literaryGenre) {
+        this.literaryGenre = literaryGenre;
+    }
+
     public BookTag(Long id, String literaryGenre) {
         this.id = id;
         this.literaryGenre = literaryGenre;
     }
 
     @Id
-    @GeneratedValue
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOOK_TAG_ID", unique = true)
     public Long getId() {
         return id;
@@ -37,11 +40,9 @@ public class BookTag {
         return literaryGenre;
     }
 
-    @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(
-            name ="JOIN_BOOK_TAGS",
-            joinColumns ={@JoinColumn(name = "BOOK_TAG_ID", referencedColumnName = "BOOK_TAG_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID")}
+    @ManyToMany (
+            //cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            mappedBy = "bookTags"
     )
     public List<Book> getBooks() {
         return books;

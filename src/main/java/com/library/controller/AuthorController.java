@@ -2,13 +2,15 @@ package com.library.controller;
 
 import com.library.domain.Author;
 import com.library.domain.AuthorDto;
-import com.library.domain.BookTagDto;
 import com.library.mapper.AuthorMapper;
 import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -44,4 +46,10 @@ public class AuthorController {
     public Author createAuthor(@RequestBody AuthorDto authorDto) {
         return authorService.saveAuthor(authorMapper.mapToAuthor(authorDto));
     }
+
+    @RequestMapping(method=RequestMethod.GET, value = "findIdByName", consumes = APPLICATION_JSON_VALUE)
+    public Long findIdByName(@RequestParam String surname, String forename)  {
+        return authorService.getIdByAuthorName(surname, forename).orElse(null);
+    }
+
 }

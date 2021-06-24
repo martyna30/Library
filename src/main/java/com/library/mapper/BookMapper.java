@@ -26,7 +26,7 @@ public class BookMapper {
                 bookDto.getSignature(),
                 bookDto.getAmountOfbook(),
                 bookDto.getAmountOfborrowed(),
-                bookTagMapper.mapToBookTagsList(bookDto.getBooksTag()),
+                bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                 authorMapper.mapToAuthorsList(bookDto.getAuthors())
         );
     }
@@ -52,7 +52,7 @@ public class BookMapper {
                         bookDto.getSignature(),
                         bookDto.getAmountOfbook(),
                         bookDto.getAmountOfborrowed(),
-                        bookTagMapper.mapToBookTagsList(bookDto.getBooksTag()),
+                        bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                         authorMapper.mapToAuthorsList(bookDto.getAuthors())))
                 .collect(Collectors.toList());
     }
