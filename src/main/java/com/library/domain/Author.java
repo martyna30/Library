@@ -39,13 +39,13 @@ public class Author {
         this.forename = forename;
     }
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AUTHOR_ID", unique = true)
     public Long getId() {
         return id;
     }
-
 
     @NotNull
     @Column(name = "SURNAME")
@@ -65,6 +65,7 @@ public class Author {
     public List<Book> getBooks() {
         return books;
     }
+
 
     public void setId(Long id) {
         this.id = id;

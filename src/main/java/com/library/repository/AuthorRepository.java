@@ -26,8 +26,8 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
     @Override
     Optional<Author> findById(Long id);
 
-    @Query(nativeQuery = true, value = "SELECT author_id from author A WHERE A.forename = FORENAME AND A.surname = SURNAME LIMIT 1;")
-    Optional<Long> findIdByAuthorName(@Param("FORENAME") String forename, @Param("SURNAME") String surname);
+    @Query(nativeQuery = true, value = "SELECT * from author A WHERE A.forename = FORENAME AND A.surname = SURNAME LIMIT 1;")
+    Optional<Author> findAuthorByAuthorName(@Param("FORENAME") String forename, @Param("SURNAME") String surname);
 
     @Modifying
     @Query(nativeQuery = true , value = "INSERT INTO join_book_authors (book_id, author_id) values (BOOK_ID, AUTHOR_ID)")

@@ -30,13 +30,13 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    @Transactional
-    public Optional<Long> getIdByAuthorName(final String surname, final String forename) {
-      Optional<Long>id = authorRepository.findIdByAuthorName(forename,surname);
-            return id;
+
+    public Optional<Author> getIdByAuthorName(final String forename, final String surname) {
+      Optional<Author>authorOptional = authorRepository.findAuthorByAuthorName(forename,surname);
+      return authorOptional;
     }
 
-    @Transactional
+
     public Integer saveIntoJoinTable(final Long bookId, final Long authorId) {
         return authorRepository.save(bookId, authorId);
     }

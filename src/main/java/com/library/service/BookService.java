@@ -4,8 +4,11 @@ import com.library.domain.Author;
 import com.library.domain.Book;
 import com.library.repository.BooksRepository;
 import org.hibernate.PersistentObjectException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookService {
+    //@Autowired
+    //EntityManager entityManager;
+
+    @Autowired
+    LocalContainerEntityManagerFactoryBean entityManagerFactory;
+
     @Autowired
     BooksRepository booksRepository;
 
@@ -32,29 +41,36 @@ public class BookService {
 
     @Transactional
     public Book saveBook(final Book book) {
+
+
         List<String>listForename = book.getAuthors().stream()
                 .map(Author::getForename).collect(Collectors.toList());
 
         List<String>listSurname = book.getAuthors().stream()
                 .map(Author::getSurname).collect(Collectors.toList());
+
+        EntityManager em = entityManagerFactory.getObject().createEntityManager();
+        Session session = (Session) em.getDelegate();
         try {
-            Optional<Long> idAuthor = authorService.getIdByAuthorName(listForename.stream().findFirst().get(), listSurname.stream().findFirst().get());
-            if(idAuthor.isPresent()) {
-                book.getAuthors().stream().findAny().get().setId(idAuthor.get());
+            Optional<Author> authorDetached = authorService.getIdByAuthorName(listForename.stream().findFirst().get(), listSurname.stream().findFirst().get());
+            if(authorDetached.isPresent()) {
+                Optional<Long> authorId = authorDetached.map(author -> author.getId());
+                //book.getAuthors().stream().findAny().get().setId(authorId.get());
 
                 //EntityManagerFactory emf = Persistence.createEntityManagerFactory("test"); // nie dziala bo ta nazwa nie jest przypadkowa, tylko musi byc gdzieś zdefiniowana
                 //emf.createEntityManager().merge(book.getAuthors().get(0));
 
-               // EntityManager em = Jpa.createEntityManager();
+                Transaction transaction = session.beginTransaction();
+                Author mergedAuthor = em.merge(authorDetached.get());
+                mergedAuthor.setId(authorId.get());
+                session.update(mergedAuthor);
 
-                //Optional<Author> update = authorService.getAuthor(idAuthor.get());
-                //update.get().setForename(listForename.stream().findFirst().get());
-                //update.get().setSurname(listForename.stream().findFirst().get());
-                //book.getAuthors().add(update.get());
-                //update.get().getBooks().add(book);
+
                 Book bookToDB = booksRepository.save(book);
                 Long bookId = bookToDB.getId();
-                authorService.saveIntoJoinTable(bookId, idAuthor.get());
+                authorService.saveIntoJoinTable(bookId, authorId.get()); // moze tu zmien n abookservice
+                transaction.commit();
+
             }
             else {
                 booksRepository.save(book);
@@ -64,6 +80,13 @@ public class BookService {
         } catch (PersistentObjectException pE) {
             System.out.println("Author already exist, but has added entry to join Table ");
        }
+        catch(Exception ex) {
+            System.out.println("Other bug");
+        }
+        finally {
+            session.close();
+            em.close();
+        }
         return book;
     }
 

@@ -48,8 +48,8 @@ public class AuthorController {
     }
 
     @RequestMapping(method=RequestMethod.GET, value = "findIdByName", consumes = APPLICATION_JSON_VALUE)
-    public Long findIdByName(@RequestParam String surname, String forename)  {
-        return authorService.getIdByAuthorName(surname, forename).orElse(null);
+    public Optional<Author> findIdByName(@RequestParam String surname, String forename)  {
+        return authorService.getIdByAuthorName(surname, forename);
     }
 
 }
