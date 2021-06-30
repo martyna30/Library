@@ -2,6 +2,7 @@ package com.library.controller;
 
 import com.library.domain.Author;
 import com.library.domain.AuthorDto;
+
 import com.library.mapper.AuthorMapper;
 import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class AuthorController {
     }
 
     @RequestMapping(method=RequestMethod.GET, value = "findIdByName", consumes = APPLICATION_JSON_VALUE)
-    public Optional<Author> findIdByName(@RequestParam String surname, String forename)  {
+    public Optional<Author>findIdByName(@RequestParam String surname, String forename)  {
         return authorService.getIdByAuthorName(surname, forename);
     }
 

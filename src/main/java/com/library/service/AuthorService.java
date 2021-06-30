@@ -32,14 +32,14 @@ public class AuthorService {
 
 
     public Optional<Author> getIdByAuthorName(final String forename, final String surname) {
-      Optional<Author>authorOptional = authorRepository.findAuthorByAuthorName(forename,surname);
+      Optional<Author> authorOptional = authorRepository.findAuthorByAuthorName(forename,surname);
       return authorOptional;
     }
 
 
-    public Integer saveIntoJoinTable(final Long bookId, final Long authorId) {
+    /*public Integer saveIntoJoinTable(final Long bookId, final Long authorId) {
         return authorRepository.save(bookId, authorId);
-    }
+    }*/
 
 
 
