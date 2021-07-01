@@ -22,25 +22,17 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
     @Override
     Author save(Author author);
 
-
     @Override
     Optional<Author> findById(Long id);
 
     @Query(nativeQuery = true, value = "SELECT * from author A WHERE A.forename = :FORENAME AND A.surname = :SURNAME LIMIT 1")
     Optional<Author> findAuthorByAuthorName(@Param("FORENAME") String forename, @Param("SURNAME") String surname);
 
-    /*@Modifying
-    //@Query(nativeQuery = true , value = "INSERT INTO join_book_authors (book_id, author_id) values (BOOK_ID, AUTHOR_ID)")
-    //Integer save(@Param("BOOK_ID") Long book_id, @Param("AUTHOR_ID")Long author_id);*/
-
     @Override
     void deleteById(Long id);
 
     @Override
     long count();
-
-
-
 }
 
 

@@ -36,11 +36,4 @@ public class AuthorService {
       return authorOptional;
     }
 
-
-    /*public Integer saveIntoJoinTable(final Long bookId, final Long authorId) {
-        return authorRepository.save(bookId, authorId);
-    }*/
-
-
-
 }
