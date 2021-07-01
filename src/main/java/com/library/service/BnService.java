@@ -1,15 +1,12 @@
 package com.library.service;
 
 import com.library.client.BnClient;
-import com.library.domain.Book;
 import com.library.domain.bn.ExternalRequestBookDto;
 import com.library.domain.bn.ExternalResponseBookDto;
 import com.library.repository.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BnService {
