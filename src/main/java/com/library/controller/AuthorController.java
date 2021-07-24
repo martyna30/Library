@@ -8,6 +8,7 @@ import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class AuthorController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createAuthor")
-    public Author createAuthor(@RequestBody AuthorDto authorDto) {
+    public Author createAuthor( @Valid @RequestBody AuthorDto authorDto) {
         return authorService.saveAuthor(authorMapper.mapToAuthor(authorDto));
     }
 

@@ -36,10 +36,13 @@ dependencies {
     testCompileOnly ('org.projectlombok:lombok:1.18.12')
 
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.13.Final'
-    compile group: 'org.glassfish', name: 'javax.el', version: '3.0.1-b12'
+
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.2.7.RELEASE'
 
     //tomcat dostarczony z zewnątrz
     providedRuntime ("org.springframework.boot:spring-boot-starter-tomcat")
+
+    compile group: 'org.hibernate', name: 'hibernate-validator-annotation-processor', version: '7.0.1.Final'
 
     //testy
     //testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'

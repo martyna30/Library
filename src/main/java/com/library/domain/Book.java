@@ -2,12 +2,11 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotNull;
+
+import javax.validation.constraints.*;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +73,14 @@ public class Book {
         this.authors = authorsList;
     }
 
+    public Book(String title, int yearOfPublication, String signature, List<BookTag> bookTagsList, List<Author> authorsList) {
+        this.title = title;
+        this.yearOfPublication = yearOfPublication;
+        this.signature = signature;
+        this.bookTags = bookTagsList;
+        this.authors = authorsList;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,21 +89,27 @@ public class Book {
         return id;
     }
 
-
-    //@Size(min= 3, max = 30)
+    @NotNull
     @Column(name = "TITLE")
+    //@Pattern(regexp = "^[A-Z][a-zA-Z]{2,}$")
+   // @NotBlank(message = "Book's title must not be empty")
     public String getTitle() {
         return title;
     }
 
+    //@Min(1000)
+    @NotNull
+    //@Digits(integer = 4, fraction = 0)
     @Column
+    //@NotBlank(message = "Year of publication must not be empty")
     public int getYearOfPublication() {
-        return yearOfPublication;
+        return yearOfPublication; // na localdate?
     }
 
-    //@NotNull
-    //@Size(min = 3, max = 8)
-   // @Column(unique = true)
+    @NotNull
+    @Column(unique = true)
+    //@Pattern(regexp = "^[A-Z]{2}( [1-9][0-9]{3})(/[0-9]{4,})$")
+    //@NotBlank(message = "Signature must not be empty")
     public String getSignature() {
         return signature;
     }
@@ -112,6 +125,8 @@ public class Book {
 
     ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
     // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
+    //@NotNull()
+    //@NotBlank(message = "Literary genre must not be empty")
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
     @JoinTable(
 
@@ -123,7 +138,8 @@ public class Book {
         return bookTags;
     }
 
-
+    //@NotNull
+    //@NotBlank(message = "Book's author must not be empty")
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})  //, CascadeType.PERSIST
         @JoinTable(
             name ="JOIN_BOOK_AUTHORS",

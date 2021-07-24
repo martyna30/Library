@@ -9,6 +9,7 @@ import com.library.service.BookTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -44,7 +45,7 @@ public class BookTagController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createBookTag", consumes = APPLICATION_JSON_VALUE)
-    public void createBookTag(@RequestBody BookTagDto bookTagDto) {
+    public void createBookTag(@Valid @RequestBody BookTagDto bookTagDto) {
         bookTagService.saveBookTag(bookTagMapper.mapToBookTag(bookTagDto));
     }
 }

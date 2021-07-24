@@ -16,6 +16,8 @@ public interface BooksRepository extends CrudRepository<Book, Long> {//. Wewnąt
         @Override
         List<Book> findAll();
 
+        //List<Book> findAllByYearOfPublicationBetween(1900, 1991);
+
         @Override
         Book save(Book book);
 

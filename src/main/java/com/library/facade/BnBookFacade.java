@@ -25,7 +25,7 @@ public class BnBookFacade {
     BnService bnService;
 
     @Autowired
-    BookService bookService;
+     BookService bookService;
 
     @Autowired
     BnMapper bnMapper;

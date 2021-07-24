@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class BookTag {
     }
 
     @NotNull
+    @Size(min = 3, max = 20)
     @Column(name = "LITERARY_GENRE")
     public String getLiteraryGenre() {
         return literaryGenre;

@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +42,6 @@ public class Author {
         this.forename = forename;
     }
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AUTHOR_ID", unique = true)
@@ -47,13 +49,16 @@ public class Author {
         return id;
     }
 
+
     @NotNull
+    @Size(min = 3, max = 30)
     @Column(name = "SURNAME")
     public String getSurname() {
         return surname;
     }
 
     @NotNull
+    @Size(min = 3, max = 30)
     @Column(name = "FORENAME")
     public String getForename() {
         return forename;
