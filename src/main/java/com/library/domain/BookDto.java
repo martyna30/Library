@@ -8,10 +8,7 @@ import lombok.Setter;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +19,12 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BookDto {
     private Long id;
-    @Pattern(regexp = "^[A-Z][a-zA-Z]{2,}$", message = "Must być z dużej litery i posiadac same litery")
-    @Size(min = 3, max = 30, message = "Length title of the book must be beetween 3 and 30 characters")
-    @NotBlank(message = "prosze podac tytuł")
+
+    @NotBlank(message = "1.Pole nie może być puste")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]+$", message = "2.Must być z dużej litery i posiadac same litery")
+    @Size(min = 3, max = 30, message = "3.Length title of the book must be beetween 3 and 30 characters")
     private String title;
-    @Digits(integer = 4, fraction = 0)
+    @Min(value = 1900, message="zły rok")
     private int yearOfPublication;
     private String signature;
     private int amountOfbook;
