@@ -43,7 +43,7 @@ dependencies {
     providedRuntime ("org.springframework.boot:spring-boot-starter-tomcat")
 
     compile group: 'org.hibernate', name: 'hibernate-validator-annotation-processor', version: '7.0.1.Final'
-
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     //testy
     //testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
     //runtimeOnly('com.h2database:h2')

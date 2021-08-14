@@ -89,26 +89,19 @@ public class Book {
         return id;
     }
 
-    @NotNull
     @Column(name = "TITLE")
-    //@Pattern(regexp = "^[A-Z][a-zA-Z]{2,}$")
-   // @NotBlank(message = "Book's title must not be empty")
     public String getTitle() {
         return title;
     }
 
-    //@Min(1000)
-    @NotNull
-    //@Digits(integer = 4, fraction = 0)
     @Column
-    //@NotBlank(message = "Year of publication must not be empty")
     public int getYearOfPublication() {
         return yearOfPublication; // na localdate?
     }
 
-    @NotNull
+
     @Column(unique = true)
-    //@Pattern(regexp = "^[A-Z]{2}( [1-9][0-9]{3})(/[0-9]{4,})$")
+    //@Pattern(regexp = "^[A-Z]{2}( [1-9][0-9]{3})(/[0-9]{4,})$" , message=)
     //@NotBlank(message = "Signature must not be empty")
     public String getSignature() {
         return signature;
