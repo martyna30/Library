@@ -28,5 +28,9 @@ public class BookTagService {
     public void deleteBookTag(final Long id) {
         bookTagRepository.deleteById(id);
     }
+
+    public  Optional<BookTag> findBookTagByName(final String literaryGenre) {
+        return bookTagRepository.findBookTagByName(literaryGenre);
+    }
 }
 

@@ -51,7 +51,7 @@ public class AuthorController {
 
     @RequestMapping(method=RequestMethod.GET, value = "findIdByName", consumes = APPLICATION_JSON_VALUE)
     public Optional<Author>findIdByName(@RequestParam String surname, String forename)  {
-        return authorService.getIdByAuthorName(surname, forename);
+        return authorService.findAuthorByName(surname, forename);
     }
 
 }

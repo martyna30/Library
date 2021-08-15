@@ -29,8 +29,8 @@ public class AuthorService {
     }
 
 
-    public Optional<Author> getIdByAuthorName(final String forename, final String surname) {
-      Optional<Author> authorOptional = authorRepository.findAuthorByAuthorName(forename,surname);
+    public Optional<Author> findAuthorByName(final String forename, final String surname) {
+      Optional<Author> authorOptional = authorRepository.findAuthorByName(forename,surname);
       return authorOptional;
     }
 }

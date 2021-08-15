@@ -22,7 +22,7 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
     Optional<Author> findById(Long id);
 
     @Query(nativeQuery = true, value = "SELECT * from author A WHERE A.forename = :FORENAME AND A.surname = :SURNAME LIMIT 1")
-    Optional<Author> findAuthorByAuthorName(@Param("FORENAME") String forename, @Param("SURNAME") String surname);
+    Optional<Author> findAuthorByName(@Param("FORENAME") String forename, @Param("SURNAME") String surname);
 
     @Override
     void deleteById(Long id);
