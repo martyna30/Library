@@ -7,14 +7,17 @@ import com.library.exception.OrderChecks;
 import com.library.mapper.BookMapper;
 import com.library.repository.BooksRepository;
 import com.library.service.BookService;
+import com.library.validation.SignatureConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -61,34 +64,40 @@ public class BookController {
     @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = APPLICATION_JSON_VALUE)
 //consumes do danych wejsciowych zadania
     public ResponseEntity<Object> createBook(@Validated(value = {OrderChecks.class}) @Valid @RequestBody BookDto bookDto
-                                     , BindingResult bindingResult) {
+            , Errors errors) {
 
-        if (bindingResult.hasErrors()) {
+        if (errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
 
-            bindingResult.getFieldErrors().stream().forEach(fieldError -> {
+            errors.getFieldErrors().stream().forEach(fieldError -> {
                 String key = fieldError.getField();
-
                 if (!errorsMap.containsKey(key)) {
                     errorsMap.put(key, new ArrayList<>());
                 }
                 errorsMap.get(key).add(fieldError.getDefaultMessage());
             });
+           /* String keySignature = signatureConstraint.field();
+            if (signatureConstraint.field() != null && !errorsMap.containsKey(keySignature)) {
+                errorsMap.put(keySignature, new ArrayList<>());
+                errorsMap.get(keySignature).add(signatureConstraint.message());*/
 
-            errorsMap.values().stream().findFirst();
+                errorsMap.values().stream().findFirst();
 
-            //for (List<String> fieldErrors: errorsMap.values()) {
+
+
+                //for (List<String> fieldErrors: errorsMap.values()) {
                 //fieldErrors.stream().findFirst();
 
                 /*for (int i = 0; i < fieldErrors.size(); i++) {
                     fieldErrors.set(i, fieldErrors.get(i).substring(2));
                 }*/
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+
         }
 
-        bookService.saveBook(bookMapper.mapToBook(bookDto));
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+            bookService.saveBook(bookMapper.mapToBook(bookDto));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
 
 
       /*if (bindingResult.hasErrors()) {
@@ -114,7 +123,8 @@ public class BookController {
 
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }*/
-}
+    }
+
 
 
 

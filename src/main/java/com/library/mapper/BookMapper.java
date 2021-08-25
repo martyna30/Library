@@ -25,8 +25,8 @@ public class BookMapper {
                 bookDto.getTitle(),
                 bookDto.getYearOfPublication(),
                 bookDto.getSignature(),
-                bookDto.getAmountOfbook(),
-                bookDto.getAmountOfborrowed(),
+                //bookDto.getAmountOfbook(),
+                //bookDto.getAmountOfborrowed(),
                 bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                 authorMapper.mapToAuthorsList(bookDto.getAuthors())
         );
@@ -38,8 +38,8 @@ public class BookMapper {
                 book.getTitle(),
                 book.getYearOfPublication(),
                 book.getSignature(),
-                book.getAmountOfbook(),
-                book.getAmountOfborrowed(),
+                //book.getAmountOfbook(),
+                //book.getAmountOfborrowed(),
                 bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
                 authorMapper.mapToAuthorsDtoList(book.getAuthors())
         );
@@ -51,8 +51,8 @@ public class BookMapper {
                         bookDto.getTitle(),
                         bookDto.getYearOfPublication(),
                         bookDto.getSignature(),
-                        bookDto.getAmountOfbook(),
-                        bookDto.getAmountOfborrowed(),
+                        //bookDto.getAmountOfbook(),
+                        //bookDto.getAmountOfborrowed(),
                         bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                         authorMapper.mapToAuthorsList(bookDto.getAuthors())))
                 .collect(Collectors.toList());
@@ -60,12 +60,11 @@ public class BookMapper {
 
     public List<BookDto> mapToBookDtoList(final List<Book>bookList){
 
-
         List<BookDto>bookDtos = bookList.stream()
                 .map(book-> new BookDto(book.getId(), book.getTitle(),
                         book.getYearOfPublication(), book.getSignature(),
-                        book.getAmountOfbook(),
-                        book.getAmountOfborrowed(),
+                        //book.getAmountOfbook(),
+                        //book.getAmountOfborrowed(),
                         bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
                         authorMapper.mapToAuthorsDtoList(book.getAuthors())))
                 .collect(Collectors.toList());

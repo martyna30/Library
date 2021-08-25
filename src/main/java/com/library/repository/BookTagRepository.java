@@ -19,7 +19,7 @@ public interface BookTagRepository extends CrudRepository<BookTag, Long> {
     @Override
     BookTag save(BookTag bookTag);
 
-    @Query(nativeQuery = true, value = "SELECT * from booktag BT WHERE BT.literaryGenre = :GENRE LIMIT 1 ")
+    @Query(nativeQuery = true, value = "SELECT * from book_tag BT WHERE BT.literary_genre = :GENRE LIMIT 1")
     Optional<BookTag> findBookTagByName(@Param("GENRE") String literaryGenre);
 
     @Override

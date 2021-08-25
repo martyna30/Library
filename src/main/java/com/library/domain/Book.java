@@ -65,8 +65,9 @@ public class Book {
         this.signature = signature;
     }
 
-    public Book(Long id, int yearOfPublication, String signature, List<BookTag> bookTagsList, List<Author> authorsList) {
+    public Book(Long id, String title, int yearOfPublication, String signature, List<BookTag> bookTagsList, List<Author> authorsList) {
         this.id = id;
+        this.title = title;
         this.yearOfPublication = yearOfPublication;
         this.signature = signature;
         this.bookTags = bookTagsList;
@@ -100,21 +101,10 @@ public class Book {
     }
 
 
-    @Column(unique = true)
-    //@Pattern(regexp = "^[A-Z]{2}( [1-9][0-9]{3})(/[0-9]{4,})$" , message=)
-    //@NotBlank(message = "Signature must not be empty")
+    @Column(name = "SIGNATURE", unique = true)
     public String getSignature() {
         return signature;
     }
-
-    public int getAmountOfbook() {
-        return amountOfbook;
-    }
-
-    public int getAmountOfborrowed() {
-        return amountOfborrowed;
-    }
-
 
     ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
     // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
@@ -143,6 +133,22 @@ public class Book {
         return authors;
     }
 
+    public int getAmountOfbook() {
+        return amountOfbook;
+    }
+
+    public int getAmountOfborrowed() {
+        return amountOfborrowed;
+    }
+
+    public void setAmountOfbook(int amountOfbook) {
+        this.amountOfbook = amountOfbook;
+    }
+
+    public void setAmountOfborrowed(int amountOfborrowed) {
+        this.amountOfborrowed = amountOfborrowed;
+    }
+
     public void setId(Long id) { //nie nalezy zmieniac id i udostepniac setera
         this.id = id;
     }
@@ -157,14 +163,6 @@ public class Book {
 
     public void setSignature(String signature) {
         this.signature = signature;
-    }
-
-    public void setAmountOfbook(int amountOfbook) {
-        this.amountOfbook = amountOfbook;
-    }
-
-    public void setAmountOfborrowed(int amountOfborrowed) {
-        this.amountOfborrowed = amountOfborrowed;
     }
 
     public void setBookTags(List<BookTag> bookTags) {

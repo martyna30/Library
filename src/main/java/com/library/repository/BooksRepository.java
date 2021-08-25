@@ -2,7 +2,9 @@ package com.library.repository;
 
 
 import com.library.domain.Book;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -29,6 +31,9 @@ public interface BooksRepository extends CrudRepository<Book, Long> {//. Wewnąt
 
         @Override
         long count();
+
+        @Query(nativeQuery = true, value = "SELECT * FROM book B WHERE B.signature = :SIGNATURE LIMIT 1")
+        Optional<Book>findBySignature(@Param("SIGNATURE") String signature);
 
         /*@Query(nativeQuery = true)
         List<Book> retrieveBookWithParticularAuthor(@Param("FORENAME")String forename);*/
