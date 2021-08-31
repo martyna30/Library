@@ -11,6 +11,7 @@ import com.library.validation.SignatureConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -52,8 +53,15 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "deleteBook", consumes = APPLICATION_JSON_VALUE)
-    public void deleteBook(@RequestParam Long bookId) {
-        bookService.deleteBook(bookId);
+    public ResponseEntity<?>deleteBook(@RequestParam Long bookId) {
+        try{
+            bookService.deleteBook(bookId);
+            return ResponseEntity.noContent().build();
+        }
+        catch (EmptyResultDataAccessException e){
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateBook")
