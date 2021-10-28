@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.library.exception.*;
 
 import com.library.validation.SignatureConstraint;
-import com.library.validation.SignatureField;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 
+import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.validation.executable.ValidateOnExecution;
+import javax.validation.groups.Default;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -23,7 +27,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@SignatureConstraint()
+@SignatureConstraint(groups = UniqueFormat.class, field = "signature")
 public class BookDto {
     private Long id;
 
@@ -38,8 +42,10 @@ public class BookDto {
 
     @NotBlank(groups= NotEmptyGroup.class, message = "Field can remain empty")
     @Pattern(groups= Format.class, regexp = "^[A-Z]{1,}( ?[1-9][0-9]{1,})(/[0-9]{4,})$" , message= "Signature has a bad format")
-    //@SignatureField(field = "signature")
+    //@SignatureField(groups= UniqueFormat.class,field = "signature", message= "Signature must by unique")
+    //@AssertTrue(groups = UniqueFormat.class, message = "Signature must by unique")
     private String signature;
+
     //private Integer amountOfbook;
     //private Integer amountOfborrowed;
     @Valid

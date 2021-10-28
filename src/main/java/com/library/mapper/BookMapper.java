@@ -38,6 +38,7 @@ public class BookMapper {
                 book.getTitle(),
                 book.getYearOfPublication(),
                 book.getSignature(),
+
                 //book.getAmountOfbook(),
                 //book.getAmountOfborrowed(),
                 bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
@@ -62,7 +63,8 @@ public class BookMapper {
 
         List<BookDto>bookDtos = bookList.stream()
                 .map(book-> new BookDto(book.getId(), book.getTitle(),
-                        book.getYearOfPublication(), book.getSignature(),
+                        book.getYearOfPublication(),
+                        book.getSignature(),
                         //book.getAmountOfbook(),
                         //book.getAmountOfborrowed(),
                         bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),

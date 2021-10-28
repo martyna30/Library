@@ -50,15 +50,15 @@ public class Author {
     }
 
 
-    @NotNull
-    @Size(min = 3, max = 30)
+    //@NotNull
+    //@Size(min = 3, max = 30)
     @Column(name = "SURNAME")
     public String getSurname() {
         return surname;
     }
 
-    @NotNull
-    @Size(min = 3, max = 30)
+    //@NotNull
+    //@Size(min = 3, max = 30)
     @Column(name = "FORENAME")
     public String getForename() {
         return forename;
@@ -88,7 +88,7 @@ public class Author {
         this.books = books;
     }
 
-    public Optional<Long> setId(Optional<Long> id1) {
-        return id1;
-    }
+    //public Optional<Long> setId(Optional<Long> id1) {
+        //return id1;
+    //}
 }

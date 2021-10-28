@@ -14,6 +14,13 @@ import static org.hibernate.sql.ast.Clause.LIMIT;
 import static org.springframework.http.HttpHeaders.FROM;
 
 
+
+
+
+
+
+
+
 /*
 @NamedNativeQuery(
         name = "Book.retrieveBookWithParticularAuthor",
@@ -24,6 +31,10 @@ import static org.springframework.http.HttpHeaders.FROM;
         resultClass = Book.class
 )*/
 /*/@NamedQueries({
+ @NamedQuery(
+                name = "Book.",
+                query = "FROM BOOK WHERE title LIKE :TITLE LIMIT 100"
+            ),
 
         @NamedQuery(
         name = "Book.retrieveBookWithParticularAuthor",
@@ -46,6 +57,10 @@ import static org.springframework.http.HttpHeaders.FROM;
         )
 
 })*/
+@NamedQuery(
+        name = "Book.findByTitle",
+        query = "FROM Book WHERE title LIKE CONCAT('%', :TITLE, '%')"
+)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -95,7 +110,7 @@ public class Book {
         return title;
     }
 
-    @Column
+    @Column()
     public int getYearOfPublication() {
         return yearOfPublication; // na localdate?
     }

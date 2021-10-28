@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.library.exception.LengthOfCharacters;
 import com.library.exception.NotEmptyGroup;
+import com.library.exception.UniqueFormat;
+import com.library.validation.AuthorConstraint;
+import com.library.validation.SignatureConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +23,8 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AuthorConstraint(groups = UniqueFormat.class, field = {"forename", "surname"})
+
 public class AuthorDto {
 
     private Long id;

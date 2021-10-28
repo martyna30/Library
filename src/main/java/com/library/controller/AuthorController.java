@@ -3,14 +3,18 @@ package com.library.controller;
 import com.library.domain.Author;
 import com.library.domain.AuthorDto;
 
+import com.library.exception.OrderChecks;
 import com.library.mapper.AuthorMapper;
 import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -45,8 +49,22 @@ public class AuthorController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createAuthor")
-    public Author createAuthor( @Valid @RequestBody AuthorDto authorDto) {
-        return authorService.saveAuthor(authorMapper.mapToAuthor(authorDto));
+    public ResponseEntity<Object> createAuthor(@Validated(value = {OrderChecks.class}) @Valid @RequestBody AuthorDto authorDto, Errors errors) {
+        if(errors.hasErrors()) {
+            Map<String, ArrayList<Object>> errorsAuthorsMap = new HashMap<>();
+
+            errors.getFieldErrors().stream().forEach(fieldError -> {
+                String key = fieldError.getField();
+                if(!errorsAuthorsMap.containsKey(key)) {
+                    errorsAuthorsMap.put(key, new ArrayList<>());
+                }
+                errorsAuthorsMap.get(key).add(fieldError.getDefaultMessage());
+            });
+            errorsAuthorsMap.values().stream().findFirst();
+            return new ResponseEntity<>(errorsAuthorsMap, HttpStatus.BAD_REQUEST);
+        }
+        authorService.saveAuthor(authorMapper.mapToAuthor(authorDto));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(method=RequestMethod.GET, value = "findIdByName", consumes = APPLICATION_JSON_VALUE)

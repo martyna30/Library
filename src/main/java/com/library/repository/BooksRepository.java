@@ -35,6 +35,12 @@ public interface BooksRepository extends CrudRepository<Book, Long> {//. Wewnąt
         @Query(nativeQuery = true, value = "SELECT * FROM book B WHERE B.signature = :SIGNATURE LIMIT 1")
         Optional<Book>findBySignature(@Param("SIGNATURE") String signature);
 
+        //@Query(nativeQuery = true, value = "SELECT * FROM book B WHERE B.title LIKE '%TITLE%'")
+        //List<Book> findByTitle(@Param("%TITLE%") String title);
+
+        @Query
+        List<Book> findByTitle(@Param("TITLE") String title);
+
         /*@Query(nativeQuery = true)
         List<Book> retrieveBookWithParticularAuthor(@Param("FORENAME")String forename);*/
 

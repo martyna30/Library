@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
@@ -17,7 +18,11 @@ public class AuthorService {
 
     }
     public Author saveAuthor(final Author author) {
-        return  authorRepository.save(author);
+        Optional<Author> authorOptional = authorRepository.findAuthorByName(author.getForename(), author.getSurname());
+        if(authorOptional.isPresent()) {
+            System.out.println("Entry already exist");
+        }
+        return authorRepository.save(author);
     }
 
     public Optional<Author> getAuthor(final Long id) {

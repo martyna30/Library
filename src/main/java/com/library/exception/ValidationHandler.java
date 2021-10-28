@@ -18,10 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-@Slf4j
-@ControllerAdvice
+//@Slf4j
+//@ControllerAdvice
 public class ValidationHandler extends ResponseEntityExceptionHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ValidationHandler.class);
+   /* private static final Logger LOGGER = LoggerFactory.getLogger(ValidationHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @Override
