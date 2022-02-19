@@ -22,11 +22,15 @@ public interface BookTagRepository extends CrudRepository<BookTag, Long> {
     @Query(nativeQuery = true, value = "SELECT * from book_tag BT WHERE BT.literary_genre = :GENRE LIMIT 1")
     Optional<BookTag> findBookTagByName(@Param("GENRE") String literaryGenre);
 
+    @Query
+    List<BookTag> findByLiteraryGenre(@Param("GENRE") String literaryGenre);
+
     @Override
     void deleteById(Long id);
 
     @Override
     long count();
+
 
 
 }

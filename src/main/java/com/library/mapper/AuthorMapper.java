@@ -21,7 +21,6 @@ public class AuthorMapper {
                 authorDto.getId(),
                 authorDto.getSurname(),
                 authorDto.getForename()
-                //bookMapper.mapToBookList(authorDto.getBooks())
         );
     }
 
@@ -30,7 +29,6 @@ public class AuthorMapper {
                 author.getId(),
                 author.getSurname(),
                 author.getForename()
-                //bookMapper.mapToBookDtoList(author.getBooks())
         );
     }
 
@@ -40,7 +38,6 @@ public class AuthorMapper {
                         authorDto.getId(),
                         authorDto.getSurname(),
                         authorDto.getForename()))
-                        //bookMapper.mapToBookList(authorDto.getBooks())))
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +47,6 @@ public class AuthorMapper {
                         author.getId(),
                         author.getSurname(),
                         author.getForename()))
-
                 .collect(Collectors.toList());
     }
 }

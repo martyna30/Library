@@ -38,4 +38,13 @@ public class AuthorService {
       Optional<Author> authorOptional = authorRepository.findAuthorByName(forename,surname);
       return authorOptional;
     }
+
+    public List<Author> getAuthorsForenameWithSpecifiedCharacters(String forename) {
+        return authorRepository.findAuthorsByForename(forename);
+    }
+
+    public List<Author> getAuthorsSurnameWithSpecifiedCharacters(String surname) {
+       List<Author> authors= authorRepository.findAuthorsBySurname(surname);
+       return authors;
+    }
 }

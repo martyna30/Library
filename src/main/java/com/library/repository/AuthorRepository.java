@@ -24,6 +24,12 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
     @Query(nativeQuery = true, value = "SELECT * from author A WHERE A.forename = :FORENAME AND A.surname = :SURNAME LIMIT 1")
     Optional<Author> findAuthorByName(@Param("FORENAME") String forename, @Param("SURNAME") String surname);
 
+    @Query
+    List<Author>findAuthorsByForename(@Param("FORENAME") String forename);
+
+    @Query
+    List<Author>findAuthorsBySurname(@Param("SURNAME") String surname);
+
     @Override
     void deleteById(Long id);
 

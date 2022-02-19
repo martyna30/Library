@@ -29,6 +29,11 @@ public class BookTagController {
         return bookTagMapper.mapToBookTagsDtoList(bookTagService.getAllBookTags());
     }
 
+
+    @RequestMapping(method = RequestMethod.GET, value = "getBooksTagsWithSpecifiedCharacters")
+    public List<BookTagDto> getBooksTagsWithSpecifiedCharacters(@RequestParam String bookTag) {
+        return bookTagMapper.mapToBookTagsDtoList(bookTagService.getBooksTagsWithSpecifiedCharacters(bookTag));
+    }
     @RequestMapping(method = RequestMethod.GET, value = "getBookTag")
     public BookTagDto getBookTag(@RequestParam Long bookTagId) throws BookTagNotFoundException  {
         return bookTagMapper.mapToBookTagDto(bookTagService.getBookTag(bookTagId).orElseThrow(BookTagNotFoundException::new));

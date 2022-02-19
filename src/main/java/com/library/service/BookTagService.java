@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class BookTagService {
+
     @Autowired
     BookTagRepository bookTagRepository;
 
@@ -29,8 +30,13 @@ public class BookTagService {
         bookTagRepository.deleteById(id);
     }
 
-    public  Optional<BookTag> findBookTagByName(final String literaryGenre) {
+    public Optional<BookTag> findBookTagByName(final String literaryGenre) {
         return bookTagRepository.findBookTagByName(literaryGenre);
+    }
+
+    public List<BookTag>getBooksTagsWithSpecifiedCharacters(final String literaryGenre) {
+        List<BookTag> bookTags = bookTagRepository.findByLiteraryGenre(literaryGenre);
+        return bookTags;
     }
 }
 

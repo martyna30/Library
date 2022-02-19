@@ -10,6 +10,11 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@NamedQuery(
+        name = "BookTag.findByLiteraryGenre",
+        query = "FROM BookTag WHERE literaryGenre LIKE CONCAT('%', :GENRE, '%')"
+)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -43,7 +48,6 @@ public class BookTag {
     }
 
     @ManyToMany (
-            //cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             mappedBy = "bookTags"
     )
     public List<Book> getBooks() {

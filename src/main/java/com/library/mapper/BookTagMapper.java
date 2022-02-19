@@ -2,6 +2,7 @@ package com.library.mapper;
 
 import com.library.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ public class BookTagMapper {
         return new BookTag(
                 bookTagDto.getId(),
                 bookTagDto.getLiteraryGenre()
-                //bookMapper.mapToBookList(bookTagDto.getBooks())
         );
     }
 
@@ -26,7 +26,6 @@ public class BookTagMapper {
         return new BookTagDto(
                 bookTag.getId(),
                 bookTag.getLiteraryGenre()
-                //bookMapper.mapToBookDtoList(bookTag.getBooks())
         );
     }
 
@@ -35,7 +34,6 @@ public class BookTagMapper {
                 .map(bookTagDto -> new BookTag(
                         bookTagDto.getId(),
                         bookTagDto.getLiteraryGenre()))
-                        //bookMapper.mapToBookList(bookTagDto.getBooks())))
                 .collect(Collectors.toList());
     }
 
@@ -47,4 +45,5 @@ public class BookTagMapper {
                         bookTag.getLiteraryGenre()))
                 .collect(Collectors.toList());
     }
+
 }

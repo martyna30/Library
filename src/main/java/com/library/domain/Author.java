@@ -2,6 +2,7 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -17,10 +18,12 @@ import java.util.Optional;
          query = "FROM Author WHERE surname = :SURNAME AND forename = :FORENAME"
 
 )*/
-
-
-
-
+@NamedQueries({
+        @NamedQuery(name="Author.findAuthorsByForename",
+                query = "FROM Author WHERE forename LIKE CONCAT('%', :FORENAME, '%')"),
+        @NamedQuery(name="Author.findAuthorsBySurname",
+                query = "FROM Author WHERE surname LIKE CONCAT('%', :SURNAME, '%')"),
+})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -49,24 +52,17 @@ public class Author {
         return id;
     }
 
-
-    //@NotNull
-    //@Size(min = 3, max = 30)
     @Column(name = "SURNAME")
     public String getSurname() {
         return surname;
     }
 
-    //@NotNull
-    //@Size(min = 3, max = 30)
     @Column(name = "FORENAME")
     public String getForename() {
         return forename;
     }
 
-    @ManyToMany(//
-            mappedBy = "authors"
-    )
+    @ManyToMany(mappedBy = "authors")
     public List<Book> getBooks() {
         return books;
     }
@@ -87,8 +83,4 @@ public class Author {
     public void setBooks(List<Book> books) {
         this.books = books;
     }
-
-    //public Optional<Long> setId(Optional<Long> id1) {
-        //return id1;
-    //}
 }

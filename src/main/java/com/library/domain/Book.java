@@ -57,6 +57,7 @@ import static org.springframework.http.HttpHeaders.FROM;
         )
 
 })*/
+
 @NamedQuery(
         name = "Book.findByTitle",
         query = "FROM Book WHERE title LIKE CONCAT('%', :TITLE, '%')"
@@ -74,6 +75,7 @@ public class Book {
     private int amountOfborrowed;
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
+    private List<Rental> borrowedBooks = new ArrayList<>();
 
     public Book(String title, String signature) {
         this.title = title;
@@ -96,7 +98,6 @@ public class Book {
         this.bookTags = bookTagsList;
         this.authors = authorsList;
     }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -123,8 +124,6 @@ public class Book {
 
     ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
     // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
-    //@NotNull()
-    //@NotBlank(message = "Literary genre must not be empty")
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
     @JoinTable(
 
@@ -138,7 +137,7 @@ public class Book {
 
     //@NotNull
     //@NotBlank(message = "Book's author must not be empty")
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})  //, CascadeType.PERSIST
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
         @JoinTable(
             name ="JOIN_BOOK_AUTHORS",
             joinColumns = {@JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID")},
@@ -146,6 +145,15 @@ public class Book {
     )
     public List<Author> getAuthors() {
         return authors;
+    }
+    @OneToMany(
+            targetEntity = Rental.class,//prawa strona relacji 1:n
+            mappedBy = "book",//obiekt po lewej 1 :n
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY
+    )
+    public List<Rental> getBorrowedBooks() {
+        return borrowedBooks;
     }
 
     public int getAmountOfbook() {
@@ -186,5 +194,9 @@ public class Book {
 
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
+    }
+
+    public void setBorrowedBooks(List<Rental> borrowedBooks) {
+        this.borrowedBooks = borrowedBooks;
     }
 }

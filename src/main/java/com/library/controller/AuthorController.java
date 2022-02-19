@@ -33,6 +33,15 @@ public class AuthorController {
         return authorMapper.mapToAuthorsDtoList(authorService.getAllAuthors());
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "getAuthorsForenameWithSpecifiedCharacters")
+    public List<AuthorDto> getAuthorsForenameWithSpecifiedCharacters(@RequestParam String forename) {
+        return authorMapper.mapToAuthorsDtoList(authorService.getAuthorsForenameWithSpecifiedCharacters(forename));
+    }
+
+   @RequestMapping(method = RequestMethod.GET, value = "getAuthorsSurnameWithSpecifiedCharacters")
+   public List<AuthorDto> getAuthorsSurnameWithSpecifiedCharacters(@RequestParam String surname) {
+       return authorMapper.mapToAuthorsDtoList(authorService.getAuthorsSurnameWithSpecifiedCharacters(surname));
+   }
     @RequestMapping(method = RequestMethod.GET, value = "getAuthor")
     public AuthorDto getAuthor(@RequestParam Long authorId) throws AuthorNotFoundException {
         return authorMapper.mapToAuthorDto(authorService.getAuthor(authorId).orElseThrow(AuthorNotFoundException:: new));

@@ -42,15 +42,15 @@ public class BookDto {
 
     @NotBlank(groups= NotEmptyGroup.class, message = "Field can remain empty")
     @Pattern(groups= Format.class, regexp = "^[A-Z]{1,}( ?[1-9][0-9]{1,})(/[0-9]{4,})$" , message= "Signature has a bad format")
-    //@SignatureField(groups= UniqueFormat.class,field = "signature", message= "Signature must by unique")
-    //@AssertTrue(groups = UniqueFormat.class, message = "Signature must by unique")
     private String signature;
 
-    //private Integer amountOfbook;
-    //private Integer amountOfborrowed;
     @Valid
     private List<BookTagDto> bookTags = new ArrayList<>();
     @Valid
     private List<AuthorDto> authors = new ArrayList<>();
 
+    private List<RentalDto> borrowedBooks = new ArrayList<>();
+
+    public BookDto(Long id, String title, int yearOfPublication, String signature) {
+    }
 }

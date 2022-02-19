@@ -15,5 +15,5 @@ public @interface AuthorConstraint {
 
     Class<? extends Payload>[] payload() default {};
     String [] field();
-    //String secondField();
+
 }

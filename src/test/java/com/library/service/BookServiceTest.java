@@ -80,7 +80,7 @@ public class BookServiceTest {
         long bookTag1Id = makbet.getBookTags().get(0).getId();
         long author1Id = kaczka_Dziwaczka.getAuthors().get(0).getId();
 
-        List<Book> bookList = bookService.getAllBooks();
+        List<Book> bookList = bookService.getAllBooks(1,10);
 
         //Then
         Assert.assertEquals(3, bookList.size());
@@ -123,7 +123,7 @@ public class BookServiceTest {
         String title2 = modified.getTitle();
         String signature2 = modified.getSignature();
 
-        List<Book> bookList = bookService.getAllBooks();
+        List<Book> bookList = bookService.getAllBooks(1,10);
 
         //Then
         assertNotNull(modified);
@@ -148,7 +148,7 @@ public class BookServiceTest {
         //When
         bookService.deleteBook(bookId);
 
-        List<Book> bookList = bookService.getAllBooks();
+        List<Book> bookList = bookService.getAllBooks(1,10);
 
         //Then
         Assert.assertEquals(0, bookList.size());

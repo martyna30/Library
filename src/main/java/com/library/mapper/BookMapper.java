@@ -4,6 +4,7 @@ import com.library.domain.Book;
 
 import com.library.domain.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 
@@ -19,14 +20,18 @@ public class BookMapper {
     @Autowired
     AuthorMapper authorMapper;
 
+    @Autowired
+    ReaderMapper readerMapper;
+
+    @Autowired
+    RentalMapper rentalMapper;
+
     public Book mapToBook(BookDto bookDto) {
         return new Book(
                 bookDto.getId(),
                 bookDto.getTitle(),
                 bookDto.getYearOfPublication(),
                 bookDto.getSignature(),
-                //bookDto.getAmountOfbook(),
-                //bookDto.getAmountOfborrowed(),
                 bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                 authorMapper.mapToAuthorsList(bookDto.getAuthors())
         );
@@ -38,11 +43,9 @@ public class BookMapper {
                 book.getTitle(),
                 book.getYearOfPublication(),
                 book.getSignature(),
-
-                //book.getAmountOfbook(),
-                //book.getAmountOfborrowed(),
                 bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
-                authorMapper.mapToAuthorsDtoList(book.getAuthors())
+                authorMapper.mapToAuthorsDtoList(book.getAuthors()),
+                rentalMapper.mapToRentalDtoList(book.getBorrowedBooks())
         );
     }
 
@@ -65,12 +68,14 @@ public class BookMapper {
                 .map(book-> new BookDto(book.getId(), book.getTitle(),
                         book.getYearOfPublication(),
                         book.getSignature(),
-                        //book.getAmountOfbook(),
-                        //book.getAmountOfborrowed(),
                         bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
-                        authorMapper.mapToAuthorsDtoList(book.getAuthors())))
+                        authorMapper.mapToAuthorsDtoList(book.getAuthors()),
+                        rentalMapper.mapToRentalDtoList(book.getBorrowedBooks())))
                 .collect(Collectors.toList());
         return bookDtos;
     }
+
+
+
 
 }
