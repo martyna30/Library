@@ -3,10 +3,12 @@ package com.library.controller;
 import com.library.domain.Author;
 import com.library.domain.AuthorDto;
 
+import com.library.domain.ListAuthorsDto;
 import com.library.exception.OrderChecks;
 import com.library.mapper.AuthorMapper;
 import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -29,8 +31,16 @@ public class AuthorController {
     private AuthorMapper authorMapper;
 
     @RequestMapping(method = RequestMethod.GET, value = "getAuthors")
-    public List<AuthorDto> getAuthors() {
-        return authorMapper.mapToAuthorsDtoList(authorService.getAllAuthors());
+    public ResponseEntity<ListAuthorsDto> getAuthors(@RequestParam int page, @RequestParam int size) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return ResponseEntity.ok(
+                new ListAuthorsDto(
+                        authorService.getCount(),
+                        authorMapper.mapToAuthorsDtoList(authorService.getAllAuthors(pageRequest))
+                )
+        );
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getAuthorsForenameWithSpecifiedCharacters")

@@ -15,13 +15,12 @@ import java.util.Optional;
 
 @Transactional
 @Repository
-public interface BooksRepository extends CrudRepository<Book, Long> , PagingAndSortingRepository<Book, Long> {//. Wewnątrz ostrych nawiasów podajemy obiekt,
+public interface BooksRepository extends CrudRepository<Book, Long> ,
+        PagingAndSortingRepository<Book, Long> {//. Wewnątrz ostrych nawiasów podajemy obiekt,
         // który będziemy pobierać //CrudRepository, która jest udostępniana w bibliotekach springframework i
         // udostępnia metody oraz logikę pobierania danych z bazy danych.
         @Override
         Page<Book> findAll(Pageable pageable);
-
-
 
         @Override
         Book save(Book book);

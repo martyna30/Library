@@ -34,7 +34,7 @@ public class BookDto {
     @NotBlank(groups= NotEmptyGroup.class, message = "Field can remain empty")
     @Size(groups= LengthOfCharacters.class, min = 3, max = 30, message = "Length title of the book must be between 3 and 30 characters")
     private String title;
-    //@NotBlank(groups= NotEmptyGroup.class, message = "Field can remain empty")
+
     @NotNull(groups= NotEmptyGroup.class, message = "Field can remain empty")
     @Min(groups= Format.class, value = 1900, message="Year of publication must be after 1900")
     @Digits(groups= LengthOfCharacters.class, integer = 4, fraction = 0, message = "Year of publication must contain the four numbers between 0-9.")

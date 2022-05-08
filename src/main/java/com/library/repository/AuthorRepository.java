@@ -1,8 +1,11 @@
 package com.library.repository;
 
 import com.library.domain.Author;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
@@ -11,9 +14,10 @@ import java.util.Optional;
 
 @Transactional
 @Repository
-public interface AuthorRepository extends CrudRepository<Author, Long> {
+public interface AuthorRepository extends CrudRepository<Author, Long>,
+        PagingAndSortingRepository<Author, Long> {
     @Override
-    List<Author> findAll();
+    Page<Author> findAll(Pageable pageable);
 
     @Override
     Author save(Author author);

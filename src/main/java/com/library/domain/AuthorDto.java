@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-@AuthorConstraint(groups = UniqueFormat.class, field = {"forename", "surname"})
+//@AuthorConstraint(groups = UniqueFormat.class, field = {"forename", "surname"})
 
 public class AuthorDto {
 
