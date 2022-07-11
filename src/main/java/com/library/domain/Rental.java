@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Reader;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -18,7 +19,9 @@ public class Rental {
     private int amountOfBorrowedBooks;
     @Enumerated(EnumType.STRING)
     private Status status;
-    Reader reader;
+
+    User user;
+
     Book book;
 
     public Rental(LocalDate startingDate, LocalDate finishDate, int amountOfBorrowedBooks, Status status) {
@@ -54,10 +57,12 @@ public class Rental {
         return amountOfBorrowedBooks;
     }
 
+
+
     @ManyToOne
-    @JoinColumn(name = "READER_ID")
-    public Reader getReader() {
-        return reader;
+    @JoinColumn(name = "USER_ID")
+    public User getUser() {
+        return user;
     }
     @ManyToOne
     @JoinColumn(name = "BOOK_ID")
@@ -89,8 +94,9 @@ public class Rental {
         this.status = status;
     }
 
-    public void setReader(Reader reader) {
-        this.reader = reader;
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setBook(Book book) {

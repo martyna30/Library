@@ -1,6 +1,6 @@
 package com.library.mapper;
 
-import com.library.domain.ReaderDto;
+
 import com.library.domain.Rental;
 import com.library.domain.RentalDto;
 import org.springframework.stereotype.Component;

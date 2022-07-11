@@ -21,7 +21,7 @@ public class BookMapper {
     AuthorMapper authorMapper;
 
     @Autowired
-    ReaderMapper readerMapper;
+    UserMapper userMapper;
 
     @Autowired
     RentalMapper rentalMapper;

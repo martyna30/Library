@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service
-public class BnService {
+//@Service
+public class BnService {}/*
 
     @Autowired
     BnClient bnClient;
@@ -31,6 +31,6 @@ public class BnService {
 
     public Iterable <Book>saveBooksFromBn(final Iterable<Book>bnBooks) {
         return booksRepository.saveAll(bnBooks);
-    }*/
+    }
 
-}
+}*/

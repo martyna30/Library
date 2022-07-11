@@ -1,6 +1,5 @@
 package com.library.controller;
 
-import com.library.domain.ReaderDto;
 import com.library.domain.RentalDto;
 import com.library.mapper.RentalMapper;
 import com.library.service.RentalService;

@@ -43,10 +43,32 @@ dependencies {
     providedRuntime ("org.springframework.boot:spring-boot-starter-tomcat")
 
     compile group: 'org.hibernate', name: 'hibernate-validator-annotation-processor', version: '7.0.1.Final'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.1.RELEASE'
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.1.RELEASE'
+
+    //json web token
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+     //https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.3-1'
+
+
+    implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.3.1.RELEASE'
+
+    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.1.RELEASE'
+
+    implementation group: 'com.auth0', name: 'java-jwt', version: '4.0.0'
+
+    //hin ?
+    //implementation group: 'org.springframework.security.experimental', name: 'spring-security-oauth2-authorization-server', version: '0.1.2'
+
+
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.3.1.RELEASE'
     //implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     //testy
     //testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
-    //runtimeOnly('com.h2database:h2')
     //runtimeOnly('com.h2database:h2')
 
 }

@@ -27,7 +27,8 @@ public class AuthorService {
     public Author saveAuthor(final Author author) {
         Optional<Author> authorOptional = authorRepository.findAuthorByName(author.getForename(), author.getSurname());
         if(authorOptional.isPresent()) {
-            System.out.println("Entry already exist");
+            author.setId(authorOptional.get().getId());
+            return authorRepository.save(author);
         }
         return authorRepository.save(author);
     }

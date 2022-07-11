@@ -74,6 +74,7 @@ public class BookController {
     public ResponseEntity<?>deleteBook(@RequestParam Long bookId) {
         try{
             bookService.deleteBook(bookId);
+            System.out.println(bookId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         catch (EmptyResultDataAccessException e){

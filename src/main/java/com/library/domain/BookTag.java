@@ -40,8 +40,8 @@ public class BookTag {
         return id;
     }
 
-    @NotNull
-    @Size(min = 3, max = 20)
+    //@NotNull
+    //@Size(min = 3, max = 20)
     @Column(name = "LITERARY_GENRE")
     public String getLiteraryGenre() {
         return literaryGenre;

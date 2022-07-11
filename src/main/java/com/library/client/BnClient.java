@@ -20,10 +20,10 @@ import java.util.List;
 import static java.util.Optional.ofNullable;
 
 
-@Component
+///@Component
 public class BnClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BnClient.class);
+    /*private static final Logger LOGGER = LoggerFactory.getLogger(BnClient.class);
 
     @Autowired
     RestTemplate restTemplate;
@@ -43,7 +43,7 @@ public class BnClient {
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(),e);
             return new ExternalResponseBookDto();
-        }*/
+        }
 
 
 
@@ -59,10 +59,8 @@ public class BnClient {
             //return Arrays.asList(ofNullable(ExternalResponseBookDto).orElse(new ExternalResponseBookDto[0]));
 
         } catch (RestClientException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             return new ArrayList<>();
         }
-
-    }
-
+    }*/
 }
