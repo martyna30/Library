@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Array;
 import java.security.Principal;
 import java.util.*;
-@RestController
+
 public class Controller {
 
     //@Autowired

@@ -37,9 +37,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Autowired
     UserService userService;
 
-    //String SECRET_KEY;
-
-
 
     private final AuthenticationManager authenticationManager;
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
