@@ -49,6 +49,7 @@ public class BookController {
     public ResponseEntity<ListBookDto> getBooks(@RequestParam int page, @RequestParam int size) {
         //@PathVariable("sortDir") String sortDir,
         //@PathVariable("sort") String sort) {
+
         PageRequest pageRequest = PageRequest.of(page, size);
 
         return ResponseEntity.ok(
@@ -70,7 +71,8 @@ public class BookController {
         return bookMapper.mapToBookDto(bookService.getBook(bookId).orElseThrow(BookNotFoundException::new));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "deleteBook", consumes = APPLICATION_JSON_VALUE)
+    @DeleteMapping( value = "deleteBook", consumes = APPLICATION_JSON_VALUE)
+    //@RequestMapping(method = RequestMethod.DELETE, value = "deleteBook", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<?>deleteBook(@RequestParam Long bookId) {
         try{
             bookService.deleteBook(bookId);

@@ -14,9 +14,9 @@ public class SecurityController {
     }
 
 
-    @PostMapping("/signIn")
-    public String signIn() throws Exception {
-        return "Sign in";
+    @PostMapping("/auth")
+    public String auth(@RequestBody String token) throws Exception {
+        return "Authorize";
     }
 
 

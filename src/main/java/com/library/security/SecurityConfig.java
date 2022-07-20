@@ -20,11 +20,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collections;
-
+@CrossOrigin
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -66,27 +67,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 //registry.addMapping("http://localhost:8080/v1/library/login")
-                registry.addMapping("/*")
-                        //.allowedOrigins("http://localhost:4200")
-                        //.allowedMethods("GET", "POST", "PUT", "DELETE")
+                registry.addMapping("http://localhost:8080/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowedOrigins("*")
-                        .allowedMethods("*")
+                        //.allowedMethods("*")
                         .allowCredentials(true);
             }
         };
     }
 
-
-
-
-
-
-
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.cors().disable();
+        http.cors();
         http.csrf().disable();
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/v1/library/login");
@@ -94,9 +88,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //http.headers().disable();//h2
         //zmina permit autenty potem role
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/v1/library/login/**").permitAll()
-                        .antMatchers(HttpMethod.OPTIONS,"/**");
+                        .antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
         http.authorizeRequests()
                 .antMatchers("/v1/library/getBook/**").permitAll()
                 .antMatchers("/v1/library/getBooks/**").permitAll()
