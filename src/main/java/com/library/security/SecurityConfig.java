@@ -90,15 +90,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //zmina permit autenty potem role
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/v1/library/login/**").permitAll()
+        http.authorizeRequests().antMatchers("/v1/library/login/**", "/v1/library/token/refresh/**").permitAll()
                         .antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
         http.authorizeRequests()
                 .antMatchers("/v1/library/getBook/**").permitAll()
                 .antMatchers("/v1/library/getBooks/**").permitAll()
+                .antMatchers("/v1/library/getAuthor/**").permitAll()
                 .antMatchers("/v1/library/getAuthors/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_LIBRARIAN")
-                .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyAuthority("ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT,"/v1/library/updateAuthor/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
+
                 .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

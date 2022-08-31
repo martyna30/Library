@@ -42,7 +42,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         response.setHeader("Access-Control-Allow-Origin", "*");
-        if(request.getServletPath().equals("/login")) {
+        if(request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh")) {
             filterChain.doFilter(request,response);
         } else {
 

@@ -1,6 +1,6 @@
 package com.library.domain;
 
-import com.library.domain.model.Librarians;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "LIBRARIAN")
-public class Librarian implements Librarians {
+public class Librarian {
 
     private Long id;
     private String surname;

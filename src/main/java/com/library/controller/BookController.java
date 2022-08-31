@@ -66,6 +66,8 @@ public class BookController {
     }
 
 
+
+
     @RequestMapping(method = RequestMethod.GET, value = "getBook")
     public BookDto getBook(@RequestParam Long bookId) throws BookNotFoundException {
         return bookMapper.mapToBookDto(bookService.getBook(bookId).orElseThrow(BookNotFoundException::new));
@@ -86,7 +88,21 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateBook")
-    public ResponseEntity<Object>updateBook(@RequestBody BookDto bookDto) {
+    public ResponseEntity<Object>updateBook(@Validated(value = {OrderChecks.class}) @Valid @RequestBody BookDto bookDto, Errors errors) {
+
+        if (errors.hasErrors()) {
+            Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
+
+            errors.getFieldErrors().stream().forEach(fieldError -> {
+                String key = fieldError.getField();
+                if (!errorsMap.containsKey(key)) {
+                    errorsMap.put(key, new ArrayList<>());
+                }
+                errorsMap.get(key).add(fieldError.getDefaultMessage());
+            });
+            errorsMap.values().stream().findFirst();
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
         bookMapper.mapToBookDto(bookService.saveBook(bookMapper.mapToBook(bookDto)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
