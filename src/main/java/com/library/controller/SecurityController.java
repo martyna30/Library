@@ -54,10 +54,12 @@ public class SecurityController {
                 UserDetails user = userService.loadUserByUsername(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 3 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .sign(algorithm);
+
+                response.setHeader("access_token", access_token);
 
                 Map<String, String> tokens =  new HashMap<>();
                 tokens.put("access_token", access_token);
@@ -65,7 +67,7 @@ public class SecurityController {
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
             } catch (Exception ex) {
-
+                logger.error("Error loggin in: {}", new Throwable(ex.getMessage()));
                 response.setHeader("error", ex.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 Map<String, String> error = new HashMap<>();

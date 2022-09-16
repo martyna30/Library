@@ -63,8 +63,22 @@ public class AuthorController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateAuthor")
-    public AuthorDto updateAuthor(@RequestBody AuthorDto authorDto) {
-        return authorMapper.mapToAuthorDto(authorService.saveAuthor(authorMapper.mapToAuthor(authorDto)));
+    public ResponseEntity<Object> updateAuthor(@Validated(value = {OrderChecks.class}) @Valid @RequestBody AuthorDto authorDto, Errors errors) {
+        if(errors.hasErrors()) {
+            Map<String, ArrayList<Object>> errorsAuthorsMap = new HashMap<>();
+
+            errors.getFieldErrors().stream().forEach(fieldError -> {
+                String key = fieldError.getField();
+                if(!errorsAuthorsMap.containsKey(key)) {
+                    errorsAuthorsMap.put(key, new ArrayList<>());
+                }
+                errorsAuthorsMap.get(key).add(fieldError.getDefaultMessage());
+            });
+            errorsAuthorsMap.values().stream().findFirst();
+            return new ResponseEntity<>(errorsAuthorsMap, HttpStatus.BAD_REQUEST);
+        }
+        authorMapper.mapToAuthorDto(authorService.saveAuthor(authorMapper.mapToAuthor(authorDto)));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createAuthor")
