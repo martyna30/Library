@@ -45,7 +45,7 @@ public class BookTagController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateBookTag")
-    public BookTagDto updateBookTag(@RequestBody BookTagDto bookTagDto) {
+    public BookTagDto updateBookTag(@Valid @RequestBody BookTagDto bookTagDto) {
         return bookTagMapper.mapToBookTagDto(bookTagService.saveBookTag(bookTagMapper.mapToBookTag(bookTagDto)));
     }
 

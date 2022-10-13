@@ -5,17 +5,15 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.library.domain.MyUserDetails;
+import com.library.domain.registration.RegisterCredentials;
+import com.library.service.RegistrationService;
 import com.library.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +37,9 @@ public class SecurityController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RegistrationService registrationService;
 
 
     @PostMapping  ("/token/refresh")
@@ -82,6 +83,11 @@ public class SecurityController {
 
     }
 
+    @PostMapping("/logout")
+    public boolean logout(HttpServletResponse response) throws Exception {
+        return false;
+    }
+
     @PostMapping("/login")
     public String login(@RequestBody String username, String password) throws Exception {
         return "Sign in";
@@ -96,7 +102,15 @@ public class SecurityController {
 
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) throws Exception {
-        return" Register";
+    public String register(@RequestBody RegisterCredentials registerCredentials) throws Exception {
+        return registrationService.register(registerCredentials);
     }
+
+     @GetMapping(path = "/register/confirm")
+     public String confirm(@RequestParam("token") String token) {
+        return registrationService.confirmToken(token);
+
+        }
+
 }
+

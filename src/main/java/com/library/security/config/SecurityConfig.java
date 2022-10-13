@@ -1,66 +1,72 @@
-package com.library.security;
+package com.library.security.config;
 
-import com.library.domain.User;
+import com.library.domain.registration.Role;
 import com.library.security.filter.CustomAuthenticationFilter;
 import com.library.security.filter.CustomAuthorizationFilter;
 import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collections;
 @CrossOrigin
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-
+    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    public SecurityConfig(UserService userService) {
+
+
+    public SecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
     }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        User admin = new User(null,"Piotr",
-                passwordEncoder().encode("456"),
-                "ROLE_ADMIN", true);
+        /*User admin = new User(null,"Piotr",
+                bCryptPasswordEncoder.encode("456"),"martyna@gmail.com",
+                "ROLE_ADMIN", false);
 
         User librarian = new User(null,"Martyna",
-                passwordEncoder().encode("123"),
-                "ROLE_LIBRARIAN", true);
+                bCryptPasswordEncoder.encode("123"),"martyna@gmail.com",
+                "ROLE_LIBRARIAN");
 
         User user = new User(null,"Michał",
-                passwordEncoder().encode("abc"),
-                "ROLE_USER", true);
-        auth.userDetailsService(userService);
+                bCryptPasswordEncoder.encode("abc"),"martyna@gmail.com",
+                "ROLE_USER", false);*/
+        //auth.userDetailsService(userService);
         //userService.saveUser(librarian);
         //userService.saveUser(user);
+        auth.authenticationProvider(daoAuthenticationProvider());
     }
 
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setUserDetailsService(userService);
+        return provider;
+    }
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -90,23 +96,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //zmina permit autenty potem role
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/v1/library/login/**", "/v1/library/token/refresh/**").permitAll()
+        http.authorizeRequests().antMatchers(   "/v1/library/register/**", "/v1/library/login/**",
+                        "/v1/library/token/refresh/**", "/v1/library/logout/**").permitAll()
                         .antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
         http.authorizeRequests()
                 .antMatchers("/v1/library/getBook/**").permitAll()
                 .antMatchers("/v1/library/getBooks/**").permitAll()
                 .antMatchers("/v1/library/getAuthor/**").permitAll()
                 .antMatchers("/v1/library/getAuthors/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.PUT,"/v1/library/updateAuthor/**").hasAnyAuthority("ROLE_LIBRARIAN", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
+                .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
+                .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
+                .antMatchers(HttpMethod.PUT,"/v1/library/updateAuthor/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
 
-                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyRole(String.valueOf(Role.ADMIN))
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyRole(Role.ADMIN.toString())
+                .anyRequest().authenticated().and().formLogin();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
 
 

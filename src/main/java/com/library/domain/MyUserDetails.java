@@ -1,11 +1,16 @@
 package com.library.domain;
 
+import com.library.domain.registration.Role;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -15,23 +20,37 @@ public class MyUserDetails implements UserDetails {
 
     private Long id;
     private String username;
+
+    private String email;
     private String password;
 
-    private boolean active;
-    @Autowired
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private boolean locked;
+
+    private boolean enabled;
+
     User user;
 
     private List<GrantedAuthority> authorities;
 
 
+    public MyUserDetails() {}
+
     public MyUserDetails(User user) {
         this.username = user.getUsername();
+        this.email = user.getEmail();
         this.password = user.getPassword();
-        this.active = user.isActive();
-        this.authorities= Arrays.stream(user.getRole().split(","))
+        this.enabled = user.isEnabled();
+        this.locked = user.isLocked();
+
+        this.authorities= Arrays.stream(role.name().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,10 +62,18 @@ public class MyUserDetails implements UserDetails {
         return password;
     }
 
+
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public String getUsername() {
         return username;
     }
+
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -55,7 +82,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -65,6 +92,18 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return active;
+        return false;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

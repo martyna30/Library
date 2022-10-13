@@ -9,16 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
-
-
-import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import javax.validation.executable.ValidateOnExecution;
-import javax.validation.groups.Default;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,8 +3,10 @@ package com.library.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.library.domain.MyUserDetails;
 
+
+import com.library.domain.MyUserDetails;
+import com.library.domain.User;
 import com.library.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +57,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        MyUserDetails userIn =  (MyUserDetails) authentication.getPrincipal();
+        MyUserDetails userIn = (MyUserDetails) authentication.getPrincipal();
 
 
        // String password = request.getParameter("password");
@@ -67,14 +69,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String access_token = JWT.create()
                 .withSubject(userIn.getUsername())
-                .withExpiresAt(new Date(currentTimeMillis + 1 * 20 * 1000))
+                .withExpiresAt(new Date(currentTimeMillis + 1 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("role", userIn.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
                 .withSubject(userIn.getUsername())
-                .withExpiresAt(new Date(currentTimeMillis + 10 * 60 * 1000))
+                .withExpiresAt(new Date(currentTimeMillis + 2 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("role", userIn.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);

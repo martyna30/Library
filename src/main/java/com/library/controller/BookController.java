@@ -6,6 +6,7 @@ import com.library.domain.BookDto;
 import com.library.domain.ListBookDto;
 import com.library.exception.BookNotFoundException;
 import com.library.exception.OrderChecks;
+import com.library.exception.OrderChecks2;
 import com.library.mapper.BookMapper;
 import com.library.repository.BooksRepository;
 import com.library.service.BookService;
@@ -88,7 +89,7 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateBook")
-    public ResponseEntity<Object>updateBook(@Validated(value = {OrderChecks.class}) @Valid @RequestBody BookDto bookDto, Errors errors) {
+    public ResponseEntity<Object>updateBook(@Validated(value = {OrderChecks2.class}) @Valid @RequestBody BookDto bookDto, Errors errors) {
 
         if (errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
@@ -101,7 +102,7 @@ public class BookController {
                 errorsMap.get(key).add(fieldError.getDefaultMessage());
             });
             errorsMap.values().stream().findFirst();
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         bookMapper.mapToBookDto(bookService.saveBook(bookMapper.mapToBook(bookDto)));
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -123,7 +124,7 @@ public class BookController {
                 errorsMap.get(key).add(fieldError.getDefaultMessage());
             });
             errorsMap.values().stream().findFirst();
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
             bookService.saveBook(bookMapper.mapToBook(bookDto));

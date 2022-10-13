@@ -9,7 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "LIBRARIAN")
+
 public class Librarian {
 
     private Long id;

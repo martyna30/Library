@@ -75,7 +75,7 @@ public class AuthorController {
                 errorsAuthorsMap.get(key).add(fieldError.getDefaultMessage());
             });
             errorsAuthorsMap.values().stream().findFirst();
-            return new ResponseEntity<>(errorsAuthorsMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorsAuthorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         authorMapper.mapToAuthorDto(authorService.saveAuthor(authorMapper.mapToAuthor(authorDto)));
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -94,7 +94,7 @@ public class AuthorController {
                 errorsAuthorsMap.get(key).add(fieldError.getDefaultMessage());
             });
             errorsAuthorsMap.values().stream().findFirst();
-            return new ResponseEntity<>(errorsAuthorsMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorsAuthorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         authorService.saveAuthor(authorMapper.mapToAuthor(authorDto));
         return new ResponseEntity<>(HttpStatus.CREATED);

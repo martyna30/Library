@@ -11,6 +11,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 
 import javax.servlet.Filter;
+import java.util.Base64;
 import java.util.Collections;
 
 
