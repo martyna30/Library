@@ -1,19 +1,11 @@
 package com.library.domain;
 
-import com.library.domain.registration.Role;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
@@ -24,19 +16,16 @@ public class MyUserDetails implements UserDetails {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
     private boolean locked;
 
     private boolean enabled;
 
-    User user;
+    //User user;
 
-    private List<GrantedAuthority> authorities;
+    private Collection<SimpleGrantedAuthority> authorities;
 
 
-    public MyUserDetails() {}
+
 
     public MyUserDetails(User user) {
         this.username = user.getUsername();
@@ -45,11 +34,19 @@ public class MyUserDetails implements UserDetails {
         this.enabled = user.isEnabled();
         this.locked = user.isLocked();
 
-        this.authorities= Arrays.stream(role.name().split(","))
+        this.authorities = Arrays.stream(user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+
+        System.out.println(authorities);
+
     }
 
+    public MyUserDetails(String username, String password, Collection<SimpleGrantedAuthority> authorities) {
+     this.username = username;
+     this.password = password;
+     this.authorities = authorities;
+    }
 
 
     @Override
@@ -92,7 +89,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public void setEmail(String email) {
@@ -106,4 +103,6 @@ public class MyUserDetails implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }

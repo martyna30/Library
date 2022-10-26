@@ -9,6 +9,7 @@ import com.library.domain.User;
 import com.library.repository.UserRepository;
 import com.library.validation.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,9 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -45,8 +44,14 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<User> user = userRepository.findByUsername(username);
-        return user.map(MyUserDetails::new)
-                    .orElseThrow(() -> new UsernameNotFoundException("User with such name doesn't exist"));
+        if (!user.isPresent()) {
+            throw new UsernameNotFoundException("User with such name doesn't exist");
+        } else {
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(user.get().getRole()));
+            return new MyUserDetails(user.get().getUsername(),
+                    user.get().getPassword(), authorities);
+        }
     }
     public UserDetails loadUserByEmail(String email) throws EmailNotFoundException {
         Optional<User> users = userRepository.findByEmail(email);

@@ -14,9 +14,9 @@ public class UserMapper {
     public User mapToUser(UserDto userDto) {
         return new User(
                 userDto.getUsername(),
-                userDto.getPassword(),
-                userDto.getEmail(),
-                userDto.getRole()
+                userDto.getPassword()
+                //userDto.getEmail(),
+                //userDto.getRole()
 
         );
     }
@@ -24,9 +24,9 @@ public class UserMapper {
     public UserDto mapToUserDto(User user) {
         return new UserDto(
                 user.getUsername(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getRole()
+                user.getPassword()
+                //user.getEmail(),
+                //user.getRole()
         );
 
     }
@@ -35,9 +35,9 @@ public class UserMapper {
         return usersListDTo.stream()
                 .map(userDto -> new User(
                         userDto.getUsername(),
-                        userDto.getPassword(),
-                        userDto.getEmail(),
-                        userDto.getRole()))
+                        userDto.getPassword()))
+                        //userDto.getEmail(),
+                        //userDto.getRole()))
                 .collect(Collectors.toList());
     }
 
@@ -45,9 +45,9 @@ public class UserMapper {
         return usersList.stream()
                 .map(user -> new UserDto(
                         user.getUsername(),
-                        user.getPassword(),
-                        user.getEmail(),
-                        user.getRole()))
+                        user.getPassword()))
+                        //user.getEmail(),
+                        //user.getRole()))
                 .collect(Collectors.toList());
     }
 

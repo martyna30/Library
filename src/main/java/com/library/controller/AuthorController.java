@@ -89,7 +89,7 @@ public class AuthorController {
             errors.getFieldErrors().stream().forEach(fieldError -> {
                 String key = fieldError.getField();
                 if(!errorsAuthorsMap.containsKey(key)) {
-                    errorsAuthorsMap.put(key, new ArrayList<>());
+                    errorsAuthorsMap.put(key,new ArrayList<>());
                 }
                 errorsAuthorsMap.get(key).add(fieldError.getDefaultMessage());
             });

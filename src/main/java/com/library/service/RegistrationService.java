@@ -43,7 +43,7 @@ public class RegistrationService {
                         registerCredentials.getUsername(),
                         registerCredentials.getPassword(),
                         registerCredentials.getEmail(),
-                        Role.USER
+                        "USER"
                 )
         );
         String link = "http://localhost:8080/v1/library/register/confirm?token=" + token;

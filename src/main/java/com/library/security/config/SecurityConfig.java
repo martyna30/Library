@@ -1,7 +1,7 @@
 package com.library.security.config;
 
-import com.library.domain.registration.Role;
-import com.library.security.filter.CustomAuthenticationFilter;
+import com.library.domain.User;
+
 import com.library.security.filter.CustomAuthorizationFilter;
 import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
 
 @CrossOrigin
 @EnableWebSecurity
@@ -28,11 +31,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Autowired
     private final UserService userService;
-
-
 
     public SecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -42,24 +42,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        /*User admin = new User(null,"Piotr",
-                bCryptPasswordEncoder.encode("456"),"martyna@gmail.com",
-                "ROLE_ADMIN", false);
-
-        User librarian = new User(null,"Martyna",
-                bCryptPasswordEncoder.encode("123"),"martyna@gmail.com",
+        User librarian = new User("Martyna",
+                bCryptPasswordEncoder.encode("123"),
                 "ROLE_LIBRARIAN");
+        System.out.println("ROLE_LIBRARIAN");
 
-        User user = new User(null,"Michał",
-                bCryptPasswordEncoder.encode("abc"),"martyna@gmail.com",
-                "ROLE_USER", false);*/
-        //auth.userDetailsService(userService);
-        //userService.saveUser(librarian);
-        //userService.saveUser(user);
+       auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+      /// userService.saveUser(librarian);
+
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
-    @Bean
+   @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
@@ -88,14 +82,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.cors();
         http.csrf().disable();
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/v1/library/login");
-        //http.csrf().disable(); //postman
-
+       // CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        //customAuthenticationFilter.setFilterProcessesUrl("/v1/library/login");
         //http.headers().disable();//h2
-        //zmina permit autenty potem role
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(   "/v1/library/register/**", "/v1/library/login/**",
                         "/v1/library/token/refresh/**", "/v1/library/logout/**").permitAll()
                         .antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
@@ -104,15 +93,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/library/getBooks/**").permitAll()
                 .antMatchers("/v1/library/getAuthor/**").permitAll()
                 .antMatchers("/v1/library/getAuthors/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
-                .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
-                .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
-                .antMatchers(HttpMethod.PUT,"/v1/library/updateAuthor/**").hasAnyRole(Role.LIBRARIAN.toString(), Role.ADMIN.toString())
+                .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.PUT,"/v1/library/updateAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
 
-                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyRole(String.valueOf(Role.ADMIN))
-                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyRole(Role.ADMIN.toString())
-                .anyRequest().authenticated().and().formLogin();
-        http.addFilter(customAuthenticationFilter);
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .anyRequest().authenticated()
+        .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        //http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }

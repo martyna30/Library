@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID", unique = true)
     private Long id;
-
+    @NotNull
     @Column(name = "USERNAME")
     private String username;
     @Column(name = "EMAIL")
@@ -34,8 +35,7 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-
-    private Role role;
+    private String role;
 
     @Column(name = "LOCKED")
     private boolean locked = false;
@@ -46,7 +46,7 @@ public class User {
     private List<Rental> borrowedBooks = new ArrayList<>();
 
     private List<ConfirmationToken> confirmationTokens = new ArrayList<>();
-    public User(String username,String password, String email,Role role) {
+    public User(String username,String password, String email,String role) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -54,13 +54,25 @@ public class User {
     }
 
 
-    public User(String username,String password,String email, Role role, boolean enabled) {
+   /* public User(String username,String password,String email, String role, boolean enabled, boolean locked) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.enabled = enabled;
+        this.locked = locked;
 
+    }*/
+
+   public User(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     @Id
@@ -96,19 +108,20 @@ public class User {
 
 
 
+
     /*@Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-         return Arrays.stream(role.name().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }*/
-    @Enumerated(EnumType.STRING)
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+             return Arrays.stream(role.name().split(","))
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        }*/
+    //@Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
