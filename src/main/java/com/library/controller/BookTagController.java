@@ -1,10 +1,8 @@
 package com.library.controller;
 
-import com.library.domain.BookDto;
 import com.library.domain.BookTagDto;
+import com.library.exception.BookTagNotFoundException;
 import com.library.mapper.BookTagMapper;
-import com.library.mapper.BookTagMapper;
-import com.library.service.BookService;
 import com.library.service.BookTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +33,7 @@ public class BookTagController {
         return bookTagMapper.mapToBookTagsDtoList(bookTagService.getBooksTagsWithSpecifiedCharacters(bookTag));
     }
     @RequestMapping(method = RequestMethod.GET, value = "getBookTag")
-    public BookTagDto getBookTag(@RequestParam Long bookTagId) throws BookTagNotFoundException  {
+    public BookTagDto getBookTag(@RequestParam Long bookTagId) throws BookTagNotFoundException {
         return bookTagMapper.mapToBookTagDto(bookTagService.getBookTag(bookTagId).orElseThrow(BookTagNotFoundException::new));
     }
 

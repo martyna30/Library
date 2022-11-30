@@ -1,8 +1,8 @@
 package com.library.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.library.exception.LengthOfCharacters;
-import com.library.exception.NotEmptyGroup;
+import com.library.validationGroup.LengthOfCharacters;
+import com.library.validationGroup.NotEmptyGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

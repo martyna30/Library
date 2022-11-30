@@ -2,18 +2,15 @@ package com.library.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.library.domain.registration.Role;
-import com.library.exception.LengthOfCharacters;
-import com.library.exception.NotEmptyGroup;
+import com.library.validationGroup.LengthOfCharacters;
+import com.library.validationGroup.NotEmptyGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 
 @AllArgsConstructor
 @NoArgsConstructor

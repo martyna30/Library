@@ -44,14 +44,15 @@ public class SignatureValidator implements ConstraintValidator<SignatureConstrai
 
             //boolean isValid = !(firstField.equals(verifyObjFromDB));
 
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-               .addPropertyNode(field)
-                .addConstraintViolation();
-        return false;
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+                    .addPropertyNode(field)
+                    .addConstraintViolation();
+            return false;
         }
         return true;
     }
+
 
 
         //Object fieldvalue = new BeanWrapperImpl(bookDto)
@@ -87,5 +88,5 @@ public class SignatureValidator implements ConstraintValidator<SignatureConstrai
 
 
 
-    }
+ }
 

@@ -3,15 +3,10 @@ package com.library.domain;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
-
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hibernate.sql.ast.Clause.LIMIT;
-import static org.springframework.http.HttpHeaders.FROM;
 
 
 
@@ -72,32 +67,23 @@ public class Book {
     private int yearOfPublication;
     private String signature;
     private int amountOfbook;
-    private int amountOfborrowed;
+    //private int amountOfborrowed;
+
+    //private ObjectName objectName;
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
     private List<Rental> borrowedBooks = new ArrayList<>();
 
-    public Book(String title, String signature) {
-        this.title = title;
-        this.signature = signature;
-    }
-
-    public Book(Long id, String title, int yearOfPublication, String signature, List<BookTag> bookTagsList, List<Author> authorsList) {
+    public Book(Long id,String title, int yearOfPublication, String signature, List<BookTag> bookTags,List<Author> authors) {
         this.id = id;
         this.title = title;
-        this.yearOfPublication = yearOfPublication;
         this.signature = signature;
-        this.bookTags = bookTagsList;
-        this.authors = authorsList;
+        this.yearOfPublication = yearOfPublication;
+        this.bookTags = bookTags;
+        this.authors = authors;
+        //this.objectName = objectName;
     }
 
-    public Book(String title, int yearOfPublication, String signature, List<BookTag> bookTagsList, List<Author> authorsList) {
-        this.title = title;
-        this.yearOfPublication = yearOfPublication;
-        this.signature = signature;
-        this.bookTags = bookTagsList;
-        this.authors = authorsList;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -105,6 +91,7 @@ public class Book {
     public Long getId() {
         return id;
     }
+
 
     @Column(name = "TITLE")
     public String getTitle() {
@@ -122,6 +109,14 @@ public class Book {
         return signature;
     }
 
+
+    /*@OneToOne(cascade = {CascadeType.ALL },fetch = FetchType.EAGER)
+    @JoinColumn(name = "OBJECT_NAME_BOOK_ID")
+    public ObjectName getObjectsName() {
+        return objectName;
+    }*/
+
+
     ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
     // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
@@ -135,8 +130,6 @@ public class Book {
         return bookTags;
     }
 
-    //@NotNull
-    //@NotBlank(message = "Book's author must not be empty")
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
         @JoinTable(
             name ="JOIN_BOOK_AUTHORS",
@@ -156,21 +149,15 @@ public class Book {
         return borrowedBooks;
     }
 
+
     public int getAmountOfbook() {
         return amountOfbook;
-    }
-
-    public int getAmountOfborrowed() {
-        return amountOfborrowed;
     }
 
     public void setAmountOfbook(int amountOfbook) {
         this.amountOfbook = amountOfbook;
     }
 
-    public void setAmountOfborrowed(int amountOfborrowed) {
-        this.amountOfborrowed = amountOfborrowed;
-    }
 
     public void setId(Long id) { //nie nalezy zmieniac id i udostepniac setera
         this.id = id;
@@ -199,4 +186,8 @@ public class Book {
     public void setBorrowedBooks(List<Rental> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
     }
+
+
+
+
 }

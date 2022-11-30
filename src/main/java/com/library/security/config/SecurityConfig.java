@@ -47,8 +47,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "ROLE_LIBRARIAN");
         System.out.println("ROLE_LIBRARIAN");
 
+        User admin = new User("Piotr",
+                bCryptPasswordEncoder.encode("456"),
+                "ROLE_ADMIN");
+
        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
-      /// userService.saveUser(librarian);
+        //userService.saveUser(librarian);
+        //userService.saveUser(admin);
 
         auth.authenticationProvider(daoAuthenticationProvider());
     }
@@ -82,6 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.cors();
         http.csrf().disable();
+        http.httpBasic();//postman
+
        // CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         //customAuthenticationFilter.setFilterProcessesUrl("/v1/library/login");
         //http.headers().disable();//h2
@@ -93,13 +100,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/library/getBooks/**").permitAll()
                 .antMatchers("/v1/library/getAuthor/**").permitAll()
                 .antMatchers("/v1/library/getAuthors/**").permitAll()
+                .antMatchers("/v1/library/createObjectName/**").permitAll()   //DO ZMIANY
+                .antMatchers("/v1/library/getObjectsWithSpecifiedTitleOrAuthor/**").permitAll()
+                .antMatchers("/v1/library/findObjectWithSpecifiedTitleOrAuthor/**").permitAll()
+
                 .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.PUT,"/v1/library/updateAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
 
-                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
-                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteBook/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/v1/library/deleteAuthor/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //http.addFilter(customAuthenticationFilter);

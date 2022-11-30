@@ -1,6 +1,7 @@
 package com.library.controller;
 
 import com.library.domain.RentalDto;
+import com.library.exception.RentalNotFoundException;
 import com.library.mapper.RentalMapper;
 import com.library.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class RentalController {
     }
 
     @GetMapping("getRental")
-    public RentalDto getRental(@RequestParam Long rentalId) throws RentalNotFoundException  {
+    public RentalDto getRental(@RequestParam Long rentalId) throws RentalNotFoundException {
         return rentalMapper.mapToRentalDto(rentalService.getRental(rentalId).orElseThrow(RentalNotFoundException::new));
     }
 

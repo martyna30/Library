@@ -1,12 +1,12 @@
 package com.library.controller;
 
 
-import com.library.domain.Book;
 import com.library.domain.BookDto;
 import com.library.domain.ListBookDto;
 import com.library.exception.BookNotFoundException;
-import com.library.exception.OrderChecks;
-import com.library.exception.OrderChecks2;
+import com.library.exception.ObjectNameNotFoundException;
+import com.library.validationGroup.OrderChecks;
+import com.library.validationGroup.OrderChecks2;
 import com.library.mapper.BookMapper;
 import com.library.repository.BooksRepository;
 import com.library.service.BookService;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.io.InvalidClassException;
 import java.util.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -44,7 +44,7 @@ public class BookController {
     @Autowired
     private BookMapper bookMapper;
 
-    //@GetMapping
+    @GetMapping
    // ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "getBooks")
     public ResponseEntity<ListBookDto> getBooks(@RequestParam int page, @RequestParam int size) {
@@ -60,9 +60,8 @@ public class BookController {
                 )
         );
     }
-
     @RequestMapping(method = RequestMethod.GET, value = "getBooksWithSpecifiedTitle")
-    public  List<BookDto>getBooksWithSpecifiedTitle(@RequestParam String title) {
+    public List<BookDto>getBooksWithSpecifiedTitle(@RequestParam String title) {
         return bookMapper.mapToBookDtoList(bookService.getBooksWithSpecifiedTitle(title));
     }
 
@@ -89,7 +88,7 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateBook")
-    public ResponseEntity<Object>updateBook(@Validated(value = {OrderChecks2.class}) @Valid @RequestBody BookDto bookDto, Errors errors) {
+    public ResponseEntity<Object>updateBook(@Validated(value = {OrderChecks2.class}) @Valid @RequestBody BookDto bookDto, Errors errors) throws ObjectNameNotFoundException, InvalidClassException {
 
         if (errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
@@ -111,7 +110,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = APPLICATION_JSON_VALUE)
 //consumes do danych wejsciowych zadania
     public ResponseEntity<Object> createBook(@Validated(value = {OrderChecks.class}) @Valid @RequestBody BookDto bookDto
-            , Errors errors) {
+            , Errors errors) throws ObjectNameNotFoundException, InvalidClassException {
 
         if (errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsMap = new HashMap<>();

@@ -2,15 +2,11 @@ package com.library.controller;
 
 import com.library.domain.User;
 import com.library.domain.UserDto;
+import com.library.exception.UserNotFoundException;
 import com.library.mapper.UserMapper;
 import com.library.service.UserService;
-import com.library.service.jwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

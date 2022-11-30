@@ -16,11 +16,14 @@ public class AuthorMapper {
     @Autowired
     BookMapper bookMapper;
 
+    @Autowired
+    ObjectMapper objectMapper;
     public Author mapToAuthor(AuthorDto authorDto) {
         return new Author(
                 authorDto.getId(),
                 authorDto.getSurname(),
                 authorDto.getForename()
+                //objectMapper.mapToObject(authorDto.getObjectNameDto())
         );
     }
 
@@ -29,6 +32,7 @@ public class AuthorMapper {
                 author.getId(),
                 author.getSurname(),
                 author.getForename()
+                //objectMapper.mapToObjectDto(author.getObjectName())
         );
     }
 
@@ -38,6 +42,7 @@ public class AuthorMapper {
                         authorDto.getId(),
                         authorDto.getSurname(),
                         authorDto.getForename()))
+                        //objectMapper.mapToObject(authorDto.getObjectNameDto())))
                 .collect(Collectors.toList());
     }
 
@@ -47,6 +52,7 @@ public class AuthorMapper {
                         author.getId(),
                         author.getSurname(),
                         author.getForename()))
+                        //objectMapper.mapToObjectDto(author.getObjectName())))
                 .collect(Collectors.toList());
     }
 }

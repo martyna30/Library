@@ -1,4 +1,4 @@
-package com.library.exception;
+package com.library.validationGroup;
 
 public interface LengthOfCharacters{
 }

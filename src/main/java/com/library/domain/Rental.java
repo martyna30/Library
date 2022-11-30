@@ -53,6 +53,9 @@ public class Rental {
         return finishDate;
     }
    // @Column(name = "AMOUNT_OF_BORROWED_BOOKS")
+
+
+    @Column(name = "AMOUNT_OF_BORROWED")
     public int getAmountOfBorrowedBooks() {
         return amountOfBorrowedBooks;
     }

@@ -6,10 +6,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.library.domain.MyUserDetails;
-import com.library.domain.User;
 import com.library.domain.UserDto;
 import com.library.domain.registration.RegisterCredentials;
-import com.library.exception.OrderChecks;
+import com.library.validationGroup.OrderChecks;
 import com.library.security.JwtToken;
 
 import com.library.service.RegistrationService;
@@ -17,30 +16,23 @@ import com.library.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -84,7 +76,7 @@ public class SecurityController {
                 UserDetails user = userService.loadUserByUsername(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .sign(algorithm);
@@ -112,8 +104,8 @@ public class SecurityController {
     }
 
     @PostMapping("/logout")
-    public boolean logout(HttpServletResponse response) throws Exception {
-        return false;
+    public  ResponseEntity<Object> logout(HttpServletResponse response) throws Exception {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping ("/login")
@@ -148,7 +140,7 @@ public class SecurityController {
             jwToken = jwtToken.generateToken(userIn, request, response);
         }
         catch (BadCredentialsException ex) {
-            //throw new Exception("Incorrect username or password", ex.getCause());
+
             return new ResponseEntity<>( "Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
             return new ResponseEntity<>(jwToken, HttpStatus.CREATED);

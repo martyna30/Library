@@ -1,6 +1,6 @@
 package com.library.service;
 
-import com.library.controller.EmailNotFoundException;
+import com.library.exception.EmailNotFoundException;
 
 import com.library.domain.ConfirmationToken;
 import com.library.domain.MyUserDetails;

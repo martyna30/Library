@@ -30,14 +30,14 @@ public class JwtToken {
 
         String access_token = JWT.create()
                 .withSubject(userIn.getUsername())
-                .withExpiresAt(new Date(currentTimeMillis + 2 * 60 * 1000))
+                .withExpiresAt(new Date(currentTimeMillis + 5 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("role", userIn.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
                 .withSubject(userIn.getUsername())
-                .withExpiresAt(new Date(currentTimeMillis + 5 * 60 * 1000))
+                .withExpiresAt(new Date(currentTimeMillis + 10 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("role", userIn.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);

@@ -4,7 +4,8 @@ import com.library.domain.Author;
 import com.library.domain.AuthorDto;
 
 import com.library.domain.ListAuthorsDto;
-import com.library.exception.OrderChecks;
+import com.library.exception.AuthorNotFoundException;
+import com.library.validationGroup.OrderChecks;
 import com.library.mapper.AuthorMapper;
 import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;

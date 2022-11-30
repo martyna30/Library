@@ -32,17 +32,17 @@ public class Author {
     private Long id;
     private String surname;
     private String forename;
+
+    //private ObjectName objectNameAuthor;
     private List<Book> books = new ArrayList<>();
 
-    public Author(String surname, String forename) {
-        this.surname = surname;
-        this.forename = forename;
-    }
+
 
     public Author(Long id, String surname, String forename) {
         this.id = id;
         this.surname = surname;
         this.forename = forename;
+        //this.objectNameAuthor = objectNameAuthor;
     }
 
     @Id
@@ -61,6 +61,14 @@ public class Author {
     public String getForename() {
         return forename;
     }
+
+
+
+   /* @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "OBJECT_NAME_AUTHOR_ID")
+    public ObjectName getObjectNameAuthor() {
+        return objectNameAuthor;
+    }*/
 
     @ManyToMany(mappedBy = "authors")
     public List<Book> getBooks() {
@@ -83,4 +91,6 @@ public class Author {
     public void setBooks(List<Book> books) {
         this.books = books;
     }
+
+
 }
