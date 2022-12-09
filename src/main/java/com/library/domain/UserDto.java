@@ -26,4 +26,6 @@ public class UserDto {
     @Size(groups= LengthOfCharacters.class, min = 3, max = 30, message = "Length password must be between 3 and 30 characters")
     private String password;
 
+    private String email;
+    private String role;
 }

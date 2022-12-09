@@ -3,6 +3,7 @@ package com.library.service;
 import com.library.domain.User;
 import com.library.domain.ConfirmationToken;
 import com.library.domain.registration.RegisterCredentials;
+import com.library.domain.registration.RegisterCredentialsDto;
 import com.library.domain.registration.Role;
 import com.library.mail.EmailSender;
 import com.library.mail.EmailService;
@@ -32,7 +33,7 @@ public class RegistrationService {
     private EmailService emailService;
 
 
-    public String register(RegisterCredentials registerCredentials) throws MessagingException {
+    public String register(RegisterCredentialsDto registerCredentials) throws MessagingException {
         boolean isValidEmail = emailValidator.test(registerCredentials.getEmail());
         if(!isValidEmail) {
             throw new IllegalStateException("Email not valid");

@@ -1,5 +1,6 @@
 package com.library.domain.registration;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @AllArgsConstructor
@@ -7,11 +8,12 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RegisterCredentials {
 
     private String username;
-    private String email;
     private String password;
+    private String email;
     //private Role role;
 
 

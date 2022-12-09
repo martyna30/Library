@@ -42,14 +42,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        User librarian = new User("Martyna",
+       /* User librarian = new User("Martyna",
                 bCryptPasswordEncoder.encode("123"),
                 "ROLE_LIBRARIAN");
         System.out.println("ROLE_LIBRARIAN");
 
         User admin = new User("Piotr",
                 bCryptPasswordEncoder.encode("456"),
-                "ROLE_ADMIN");
+                "ROLE_ADMIN");*/
 
        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
         //userService.saveUser(librarian);

@@ -32,8 +32,8 @@ public class ObjectControler {
     }
 
     @GetMapping(value = "findObjectWithSpecifiedTitleOrAuthor", consumes = APPLICATION_JSON_VALUE)
-    public ObjectNameDto getObjectWithSpecifiedTitleOrAuthor(@RequestParam String objectToSearch) {
-        return objectMapper.mapToObjectDto(objectService.findObjectWithSpecifiedTitleOrAuthor(objectToSearch).get());
+    public ObjectNameDto getObjectWithSpecifiedTitleOrAuthor(@RequestParam String objectToSearch) throws ObjectNameNotFoundException {
+        return objectMapper.mapToObjectDto(objectService.findObjectWithSpecifiedTitleOrAuthor(objectToSearch).orElseThrow(ObjectNameNotFoundException::new));
     }
 
     @PostMapping(value = "createObjectName", consumes = APPLICATION_JSON_VALUE)

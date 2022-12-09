@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.library.domain.MyUserDetails;
 import com.library.domain.UserDto;
 import com.library.domain.registration.RegisterCredentials;
+import com.library.domain.registration.RegisterCredentialsDto;
 import com.library.validationGroup.OrderChecks;
 import com.library.security.JwtToken;
 
@@ -76,7 +77,7 @@ public class SecurityController {
                 UserDetails user = userService.loadUserByUsername(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 3 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .sign(algorithm);
@@ -173,8 +174,8 @@ public class SecurityController {
 
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterCredentials registerCredentials) throws Exception {
-        return registrationService.register(registerCredentials);
+    public String register(@RequestBody RegisterCredentialsDto registerCredentialsDto) throws Exception {
+        return registrationService.register(registerCredentialsDto);
     }
 
      @GetMapping(path = "/register/confirm")

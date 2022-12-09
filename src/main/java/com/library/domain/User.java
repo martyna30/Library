@@ -64,7 +64,7 @@ public class User {
 
     }*/
 
-   public User(String username, String password, String role) {
+  /* public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -73,7 +73,7 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }
+    }*/
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,9 +91,6 @@ public class User {
     public List<Rental> getBorrowedBooks() {
         return borrowedBooks;
     }
-
-
-
 
 
     @OneToMany(
