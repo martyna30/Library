@@ -53,27 +53,15 @@ public class User {
         this.role = role;
     }
 
-
-   /* public User(String username,String password,String email, String role, boolean enabled, boolean locked) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-        this.enabled = enabled;
-        this.locked = locked;
-
-    }*/
-
-  /* public User(String username, String password, String role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }*/
+    }
+
+    public User(String username) {
+        this.username = username;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,7 +73,7 @@ public class User {
     @OneToMany(
             targetEntity = Rental.class,//prawa strona relacji 1:n
             mappedBy = "user",//obiekt po lewej 1 :n
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY
     )
     public List<Rental> getBorrowedBooks() {

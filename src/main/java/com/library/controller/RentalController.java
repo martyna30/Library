@@ -1,8 +1,12 @@
 package com.library.controller;
 
+import com.library.domain.BookDto;
+import com.library.domain.LoggedUserDto;
 import com.library.domain.RentalDto;
+import com.library.domain.UserDto;
 import com.library.exception.RentalNotFoundException;
 import com.library.mapper.RentalMapper;
+import com.library.mapper.UserMapper;
 import com.library.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,9 @@ public class RentalController {
     @Autowired
     RentalMapper rentalMapper;
 
+    @Autowired
+    UserMapper userMapper;
+
     @GetMapping("getRentals")
     public List<RentalDto> getAllRentals() {
         return rentalMapper.mapToRentalDtoList(rentalService.getAllRentals());
@@ -30,7 +37,7 @@ public class RentalController {
         return rentalMapper.mapToRentalDto(rentalService.getRental(rentalId).orElseThrow(RentalNotFoundException::new));
     }
 
-    @DeleteMapping( "deleteRental")
+    @DeleteMapping("deleteRental")
     public void deleteRental(@RequestParam Long rentalId) {
         rentalService.deleteRental(rentalId);
     }
@@ -40,8 +47,19 @@ public class RentalController {
         return rentalMapper.mapToRentalDto(rentalService.saveRental(rentalMapper.mapToRental(rentalDto)));
     }
 
-    @PostMapping( "createRental")
+    @PostMapping("createRental")
     public void createRental(@Valid @RequestBody RentalDto rentalDto) {
         rentalService.saveRental(rentalMapper.mapToRental(rentalDto));
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "checkoutBook")
+    public List<RentalDto> checkoutBook(@RequestParam Long bookId, @RequestBody LoggedUserDto loggedUserDto) {
+
+        return rentalMapper.mapToRentalDtoList(rentalService.checkoutBook(bookId, loggedUserDto));
+    }
+
+    @GetMapping("getRentalsForUser")
+    public List<RentalDto> getAllRentals(@RequestParam LoggedUserDto loggedUserDto) {
+        return rentalMapper.mapToRentalDtoList(rentalService.getRentals(loggedUserDto));
     }
 }

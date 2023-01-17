@@ -77,7 +77,7 @@ public class SecurityController {
                 UserDetails user = userService.loadUserByUsername(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 3 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 2 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .sign(algorithm);

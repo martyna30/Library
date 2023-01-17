@@ -26,23 +26,12 @@ public class BookMapper {
     @Autowired
     ObjectMapper objectMapper;
 
-    /*public Book mapToBook(BookDto bookDto) {
-        return new Book(
-                bookDto.getId(),
-                bookDto.getTitle(),
-                bookDto.getYearOfPublication(),
-                bookDto.getSignature(),
-                bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
-                authorMapper.mapToAuthorsList(bookDto.getAuthors()),
-                objectMapper.mapToObject(bookDto.getObjectsNameDto())
-        );
-    }*/
-
     public Book mapToBook(BookDto bookDto) {
         return new Book(
                 bookDto.getId(),
                 bookDto.getTitle(),
                 bookDto.getYearOfPublication(),
+                bookDto.getAmountOfBook(),
                 bookDto.getSignature(),
                 bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                 authorMapper.mapToAuthorsList(bookDto.getAuthors())
@@ -56,6 +45,7 @@ public class BookMapper {
                 book.getTitle(),
                 book.getYearOfPublication(),
                 book.getSignature(),
+                book.getAmountOfBook(),
                 bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
                 authorMapper.mapToAuthorsDtoList(book.getAuthors())
                 // rentalMapper.mapToRentalDtoList(book.getBorrowedBooks()),
@@ -69,6 +59,7 @@ public class BookMapper {
                         bookDto.getId(),
                         bookDto.getTitle(),
                         bookDto.getYearOfPublication(),
+                        bookDto.getAmountOfBook(),
                         bookDto.getSignature(),
                         bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                         authorMapper.mapToAuthorsList(bookDto.getAuthors())))
@@ -85,6 +76,7 @@ public class BookMapper {
                         book.getTitle(),
                         book.getYearOfPublication(),
                         book.getSignature(),
+                        book.getAmountOfBook(),
                         bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
                         authorMapper.mapToAuthorsDtoList(book.getAuthors())))
                         //rentalMapper.mapToRentalDtoList(book.getBorrowedBooks()),

@@ -66,19 +66,18 @@ public class Book {
     private String title;
     private int yearOfPublication;
     private String signature;
-    private int amountOfbook;
-    //private int amountOfborrowed;
+    private int amountOfBook;
 
-    //private ObjectName objectName;
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
     private List<Rental> borrowedBooks = new ArrayList<>();
 
-    public Book(Long id,String title, int yearOfPublication, String signature, List<BookTag> bookTags,List<Author> authors) {
+    public Book(Long id,String title, int yearOfPublication, int amountOfBook, String signature, List<BookTag> bookTags,List<Author> authors) {
         this.id = id;
         this.title = title;
         this.signature = signature;
         this.yearOfPublication = yearOfPublication;
+        this.amountOfBook = amountOfBook;
         this.bookTags = bookTags;
         this.authors = authors;
         //this.objectName = objectName;
@@ -142,7 +141,7 @@ public class Book {
     @OneToMany(
             targetEntity = Rental.class,//prawa strona relacji 1:n
             mappedBy = "book",//obiekt po lewej 1 :n
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY
     )
     public List<Rental> getBorrowedBooks() {
@@ -150,14 +149,13 @@ public class Book {
     }
 
 
-    public int getAmountOfbook() {
-        return amountOfbook;
+    public int getAmountOfBook() {
+        return amountOfBook;
     }
 
-    public void setAmountOfbook(int amountOfbook) {
-        this.amountOfbook = amountOfbook;
+    public void setAmountOfBook(int amountOfBook) {
+        this.amountOfBook = amountOfBook;
     }
-
 
     public void setId(Long id) { //nie nalezy zmieniac id i udostepniac setera
         this.id = id;

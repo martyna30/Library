@@ -103,7 +103,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/library/createObjectName/**").permitAll()   //DO ZMIANY
                 .antMatchers("/v1/library/getObjectsWithSpecifiedTitleOrAuthor/**").permitAll()
                 .antMatchers("/v1/library/findObjectWithSpecifiedTitleOrAuthor/**").permitAll()
-
+                .antMatchers(HttpMethod.PUT,"/v1/library/checkoutBook/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/v1/library/getRentalsForUser/**").permitAll()
+                // .antMatchers(HttpMethod.PUT,"/v1/library/checkoutBook/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.PUT,"/v1/library/updateBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")

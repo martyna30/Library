@@ -56,22 +56,5 @@ public class UserController {
         userService.saveUser(userMapper.mapToUser(userDto));
     }
 
-    @PostMapping("auth1")
-    public String generateToken(@RequestBody User user) throws Exception {
 
-        /*try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
-        }
-        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
-
-       // String jwt = jwtService.generateToken(userDetails);
-        //return  ResponseEntity.ok(jwt);
-        //return jwt;
-    }*/
-        return null;
-    }
 }

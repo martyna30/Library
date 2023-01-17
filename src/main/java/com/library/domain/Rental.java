@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @Table(name = "RENTAL")
 public class Rental {
     private Long id;
+
+    private String title;
     private LocalDate startingDate;
     private LocalDate finishDate;
     private int amountOfBorrowedBooks;
@@ -24,19 +26,20 @@ public class Rental {
 
     Book book;
 
-    public Rental(LocalDate startingDate, LocalDate finishDate, int amountOfBorrowedBooks, Status status) {
+    public Rental(String title, LocalDate startingDate, LocalDate finishDate, int amountOfBorrowedBooks, Status status, User user, Book book) {
+        this.title = title;
         this.startingDate = startingDate;
         this.finishDate = finishDate;
         this.amountOfBorrowedBooks = amountOfBorrowedBooks;
+        this.status = status;
+        this.user = user;
+        this.book = book;
     }
 
-    public Rental(Long id, LocalDate startingDate, LocalDate finishDate, Status status, int amountOfBorrowedBooks) {
-        this.id = id;
-        this.startingDate = LocalDate.now();
-        this.finishDate = finishDate;
-        this.status = status;
-        this.amountOfBorrowedBooks = amountOfBorrowedBooks;
+    public String getTitle() {
+        return title;
     }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,5 +107,9 @@ public class Rental {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

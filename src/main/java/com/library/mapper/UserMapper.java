@@ -21,6 +21,8 @@ public class UserMapper {
         );
     }
 
+
+
     public UserDto mapToUserDto(User user) {
         return new UserDto(
                 user.getUsername(),
@@ -30,6 +32,8 @@ public class UserMapper {
         );
 
     }
+
+
 
     public List<User>mapToUsersList(final List<UserDto>usersListDTo) {
         return usersListDTo.stream()

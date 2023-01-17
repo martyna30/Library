@@ -34,13 +34,16 @@ public class BookDto {
     private String title;
 
     @NotNull(groups= NotEmptyGroup.class, message = "Field can remain empty")
-    @Min(groups= Format.class, value = 1900, message="Year of publication must be after 1900")
+    @Min(groups= Format.class, value = 1901, message="Year of publication must be after 1900")
     @Digits(groups= LengthOfCharacters.class, integer = 4, fraction = 0, message = "Year of publication must contain the four numbers between 0-9.")
     private Integer yearOfPublication;
 
     @NotBlank(groups= NotEmptyGroup.class, message = "Field can remain empty")
     @Pattern(groups= Format.class, regexp = "^[A-Z]{1,}( ?[1-9][0-9]{1,})(/[0-9]{4,})$" , message= "Signature has a bad format")
     private String signature;
+    @NotNull(groups= NotEmptyGroup.class, message = "Field can remain empty")
+    @Min(groups= Format.class, value = 1, message="Amount of books must be at least 1")
+    private Integer amountOfBook;
 
     @Valid
     private List<BookTagDto> bookTags = new ArrayList<>();
