@@ -37,14 +37,14 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-      response.setHeader("Access-Control-Allow-Origin", "*");
-        /*if(request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh")) {
-            filterChain.doFilter(request,response);*/
-       // } else {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        //if (request.getServletPath().equals("/logout")) {
+
+            // (request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh")) {
+        //lse {
 
             String header = request.getHeader(AUTHORIZATION);
             if (header != null && header.startsWith("Bearer ")) {
@@ -72,13 +72,14 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     response.setContentType(APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
                 }
-            }
-            else {
-                filterChain.doFilter(request,response);
+            } else {
+                filterChain.doFilter(request, response);
             }
 
         }
     }
+
+
 
 
 

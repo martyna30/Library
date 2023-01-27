@@ -92,8 +92,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
        // CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         //customAuthenticationFilter.setFilterProcessesUrl("/v1/library/login");
         //http.headers().disable();//h2
+       //  "/v1/library/logout/**")
+        /// http.authorizeRequests().antMatchers("/v1/library/logout/**").anonymous();
         http.authorizeRequests().antMatchers(   "/v1/library/register/**", "/v1/library/login/**",
-                        "/v1/library/token/refresh/**", "/v1/library/logout/**").permitAll()
+                        "/v1/library/token/refresh/**", ("/v1/library/logout/**")).permitAll()
                         .antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
         http.authorizeRequests()
                 .antMatchers("/v1/library/getBook/**").permitAll()
@@ -103,8 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/library/createObjectName/**").permitAll()   //DO ZMIANY
                 .antMatchers("/v1/library/getObjectsWithSpecifiedTitleOrAuthor/**").permitAll()
                 .antMatchers("/v1/library/findObjectWithSpecifiedTitleOrAuthor/**").permitAll()
-                .antMatchers(HttpMethod.PUT,"/v1/library/checkoutBook/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/v1/library/getRentalsForUser/**").permitAll()
+                .antMatchers(HttpMethod.PUT,"/v1/library/rental/checkoutBook/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN", "ROLE_LIBRARIAN")
+                .antMatchers(HttpMethod.GET,"/v1/library/rental/getRentalsForUser/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN", "ROLE_LIBRARIAN")
                 // .antMatchers(HttpMethod.PUT,"/v1/library/checkoutBook/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.POST,"/v1/library/createBook/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")
                 .antMatchers(HttpMethod.POST,"/v1/library/createAuthor/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_LIBRARIAN")

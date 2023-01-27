@@ -1,10 +1,14 @@
 package com.library.domain;
 
+import com.library.validationGroup.Format;
+import com.library.validationGroup.NotEmptyGroup;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +145,7 @@ public class Book {
     @OneToMany(
             targetEntity = Rental.class,//prawa strona relacji 1:n
             mappedBy = "book",//obiekt po lewej 1 :n
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     public List<Rental> getBorrowedBooks() {

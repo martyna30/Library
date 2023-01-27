@@ -1,6 +1,7 @@
 package com.library;
 
 
+import com.library.security.filter.CustomAuthorizationFilter;
 import com.library.validator.ValidationClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,19 @@ public class LibraryApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(LibraryApplication.class, args);
     }
+
+    /*@Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean filterRegistrationBean =  new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new CustomAuthorizationFilter());
+        filterRegistrationBean.setUrlPatterns(Collections.singleton("getBooksWithSpecifiedTitle"));
+        //filterRegistrationBean.addUrlPatterns("deleteBook");
+        //filterRegistrationBean.addUrlPatterns("updateBook");
+        //filterRegistrationBean.addUrlPatterns("createBook");
+
+        //f//ilterRegistrationBean.addUrlPatterns("/token/refresh");
+        return filterRegistrationBean;
+    }*/
 
    @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

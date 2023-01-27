@@ -10,6 +10,7 @@ import com.library.validationGroup.Format;
 import com.library.validationGroup.LengthOfCharacters;
 import com.library.validationGroup.NotEmptyGroup;
 import com.library.validationGroup.UniqueFormat;
+import com.library.validationGroup.Amount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +44,7 @@ public class BookDto {
     private String signature;
     @NotNull(groups= NotEmptyGroup.class, message = "Field can remain empty")
     @Min(groups= Format.class, value = 1, message="Amount of books must be at least 1")
+    @Min(groups= Amount.class, value = 1, message="Amount of books must be at least 1")
     private Integer amountOfBook;
 
     @Valid

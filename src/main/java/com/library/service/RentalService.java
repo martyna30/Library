@@ -1,21 +1,28 @@
 package com.library.service;
 
 import com.library.domain.*;
+import com.library.domain.rental.RentalBookDto;
 import com.library.exception.BookNotFoundException;
+import com.library.mapper.BookMapper;
 import com.library.mapper.LoggedUserMapper;
 import com.library.mapper.UserMapper;
 import com.library.repository.BooksRepository;
 import com.library.repository.RentalRepository;
 import com.library.repository.UserRepository;
+import com.library.validationGroup.OrderChecks3;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RentalService {
@@ -25,6 +32,9 @@ public class RentalService {
 
     @Autowired
     BooksRepository booksRepository;
+
+    @Autowired
+    BookMapper bookMapper;
 
     @Autowired
     UserRepository userRepository;
@@ -54,46 +64,42 @@ public class RentalService {
 
 
     @Transactional
-    public List<Rental> checkoutBook(Long bookId, LoggedUserDto loggedUserDto) {
-        Optional<Book> bookOptional = booksRepository.findById(bookId);
-        Optional<User> userOptional = userRepository.findByUsername(loggedUserMapper.mapToUser(loggedUserDto).getUsername());
+    public boolean checkoutBook (BookDto bookDto, String username) {
+        //Optional<Book> bookOptional = booksRepository.findById(bookId);
+        Book book = bookMapper.mapToBook(bookDto);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        long count = 0;
+        long countNew = 0;
         try {
-            if (bookOptional.isPresent()) {
-                int amountOfBook = bookOptional.get().getAmountOfBook();
-                if (amountOfBook > 0) {
+            int amountOfBook = book.getAmountOfBook();
+                // if (amountOfBook > 0) {
                     int newAmountOfBook = amountOfBook - 1;
-                    bookOptional.get().setAmountOfBook(newAmountOfBook);
-
-                    bookOptional.get().getBorrowedBooks()
+                    book.setAmountOfBook(newAmountOfBook);
+                    count = book.getBorrowedBooks().stream().count();
+                    book.getBorrowedBooks()
                             .add(new Rental(
-                                    bookOptional.get().getTitle(),
+                                    book.getTitle(),
                                     LocalDate.now(),
                                     LocalDate.now().plusDays(30),
                                             1,
                                     Status.ACTIVE,
                                     userOptional.isPresent() ? userOptional.get() :
-                                            new User(loggedUserMapper.mapToUser(loggedUserDto).getUsername()),
-                                            bookOptional.get()
+                                            new User(userOptional.get().getUsername()),
+                                    book
                                     )
                             );
-                    booksRepository.save(bookOptional.get());
-                } else {
-                    System.out.println("Amount of books must be at least 1");
-                    return null;
-                }
-            } else {
-                System.out.println("Book doesn't exist");
-            }
+                    booksRepository.save(book);
+            countNew = book.getBorrowedBooks().stream().count();
         } catch (BookNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
-        return bookOptional.get().getBorrowedBooks();
+        return countNew > count ? true : false;
     }
 
 
-    public List<Rental> getRentals(LoggedUserDto loggedUserDto) {
+    public List<Rental> getRentals(String username) {
         List<Rental> rentals = new ArrayList<>();
-        Optional<User> userOptional = userRepository.findByUsername(loggedUserMapper.mapToUser(loggedUserDto).getUsername());
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             rentals = userOptional.get().getBorrowedBooks();
         } else {
