@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+
 **/out/ **/build/
 
 ### STS ###
@@ -28,6 +29,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -38,3 +40,6 @@ out/
 ### VS Code ###
 .vscode/
 gradle/
+
+*.properties
+
