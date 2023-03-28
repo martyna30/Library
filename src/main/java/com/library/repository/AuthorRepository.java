@@ -39,6 +39,9 @@ public interface AuthorRepository extends CrudRepository<Author, Long>,
 
     @Override
     long count();
+
+    @Override
+    boolean existsById(Long id);
 }
 
 

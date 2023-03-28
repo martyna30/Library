@@ -11,14 +11,14 @@ public class LoggedUserMapper {
     public LoggedUserDto mapToLoggedUserDto(User user) {
         return new LoggedUserDto(
                 user.getUsername()
-                //user.getPassword()
+
         );
     }
 
     public User mapToUser(LoggedUserDto loggedUserDto) {
         return new User(
                 loggedUserDto.getUsername()
-                //loggedUserDto.getPassword()
+
         );
     }
 

@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RentalDto {
-
+    private Long id;
     private String title;
     private LocalDate startingDate;
     private LocalDate finishDate;
@@ -25,7 +25,4 @@ public class RentalDto {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    LoggedUserDto loggedUserDto;
-    @Valid
-    BookDto bookDto;
 }

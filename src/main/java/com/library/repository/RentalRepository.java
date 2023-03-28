@@ -1,6 +1,7 @@
 package com.library.repository;
 
 import com.library.domain.Rental;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,12 @@ public interface RentalRepository extends CrudRepository<Rental, Long> {
 
     @Override
     Rental save(Rental rental);
+
+    @Override
+    void deleteAll();
+
+
+    Optional<Rental> findRentalByTitle(String title);
+
+
 }

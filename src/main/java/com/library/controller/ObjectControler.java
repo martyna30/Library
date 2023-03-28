@@ -9,6 +9,7 @@ import com.library.service.ObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.InvalidClassException;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -37,7 +38,7 @@ public class ObjectControler {
     }
 
     @PostMapping(value = "createObjectName", consumes = APPLICATION_JSON_VALUE)
-    ObjectNameDto createObjectName(@RequestBody ObjectNameDto objectNameDto) {
+    ObjectNameDto createObjectName(@RequestBody ObjectNameDto objectNameDto) throws InvalidClassException {
         return objectMapper.mapToObjectDto(objectService.save(objectMapper.mapToObject(objectNameDto)));
     }
 }

@@ -10,13 +10,22 @@ import com.library.exception.ObjectNameNotFoundException;
 import org.junit.Assert;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
+import java.io.InvalidClassException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -34,160 +43,190 @@ public class BookServiceTest {
     @Autowired
     AuthorService authorService;
 
+    @Autowired
+    ObjectService objectService;
+
     @Test
-    public void testSaveBookWithObjectName() throws ObjectNameNotFoundException {
-        Book makbet  = new Book();
-        //Book kaczka_Dziwaczka = new Book("Kaczka Dziwaczka","197002" );
-        //Book romeoAndJuliet = new Book("Romeo and Juliet", "196003");
+    public void testSaveBookWithObjectName() throws InvalidClassException {
+        //Given
+        Book makbet  = new Book("Makbet", "200098",1999,1);
+        //Author shakespeare = new Author("Shakespeare","William" );
+        ObjectName objectName = new ObjectName("Makbet", makbet);
+        //When
+        makbet.setObjectName(objectName);
+        Book book = bookService.saveBook(makbet);
+        long makbetId = book.getId();
 
-        //makbet.set(new ObjectName(makbet.getId(), null, TypeOfObject.BOOK));
 
-        bookService.saveBook(makbet);
-
-        //long makbet_object_id = makbet.getObjectsName().getId();
-
-        long makbetId = makbet.getId();
-
+        //Then
         Assert.assertNotEquals(0, makbetId);
-        //Assert.assertNotEquals(0, makbet_object_id);
-
-        //Assert.assertEquals(makbetId,makbet_object_id);
 
         //CleanUp
         try {
-         //bookService.deleteBook(makbetId);
+         bookService.deleteBook(makbetId);
         } catch (Exception e) {
             //nothing
         }
+
+
     }
 
-
-
     @Test
-    public void testSaveBookWithAuthorAndBookTag() {
+    public void testSaveBookWithBookTag() throws InvalidClassException {
         //Given
-        BookTag fiction = new BookTag("fiction");
-        BookTag thriller = new BookTag("thiller");
         BookTag fantasy = new BookTag("fantasy");
 
-        Author brzechwa  = new Author("Brzechwa","Jan");
-        Author pratchett = new Author("Pratchett","Terry");
-        Author shakespeare = new Author("Shakespeare","William" );
+        Book kaczka_Dziwaczka = new Book("Kaczka Dziwaczka","200004",2000,3);
+        ObjectName objectName = new ObjectName("Kaczka Dziwaczka", kaczka_Dziwaczka);
+        kaczka_Dziwaczka.setObjectName(objectName);
 
-        Book makbet  = new Book("Makbet", "195001");
-        Book kaczka_Dziwaczka = new Book("Kaczka Dziwaczka","197002" );
-        Book romeoAndJuliet = new Book("Romeo and Juliet", "196003");
-
-        makbet.getAuthors().add(pratchett);
-        makbet.getAuthors().add(shakespeare);
-        kaczka_Dziwaczka.getAuthors().add(brzechwa);
-        romeoAndJuliet.getAuthors().add(shakespeare);
-
-        shakespeare.getBooks().add(romeoAndJuliet);
-        shakespeare.getBooks().add(makbet);
-        brzechwa.getBooks().add(kaczka_Dziwaczka);
-        pratchett.getBooks().add(makbet);
-
-        makbet.getBookTags().add(fiction);
-        makbet.getBookTags().add(thriller);
         kaczka_Dziwaczka.getBookTags().add(fantasy);
-        romeoAndJuliet.getBookTags().add(thriller);
-        romeoAndJuliet.getBookTags().add(fiction);
-
-        fiction.getBooks().add(makbet);
-        fiction.getBooks().add(romeoAndJuliet);
-        thriller.getBooks().add(makbet);
-        thriller.getBooks().add(romeoAndJuliet);
         fantasy.getBooks().add(kaczka_Dziwaczka);
 
         //When
-        //bookService.saveBook(makbet);
-        //bookService.saveBook(kaczka_Dziwaczka);
-        //bookService.saveBook(romeoAndJuliet);
+        bookService.saveBook(kaczka_Dziwaczka);
+        long book1Id = kaczka_Dziwaczka.getId();
+        long objectNameBookId = kaczka_Dziwaczka.getObjectName().getId();
 
-        long book1Id = makbet.getId();
-        long book2Id = kaczka_Dziwaczka.getId();
-        long book3Id = romeoAndJuliet.getId();
-
-        long bookTag1Id = makbet.getBookTags().get(0).getId();
-        long author1Id = kaczka_Dziwaczka.getAuthors().get(0).getId();
-
-       // List<Book> bookList = bookService.getAllBooks(1);
-
-        //Then
-        //Assert.assertEquals(3, bookList.size());
+        long booktag1id = fantasy.getId();
 
         Assert.assertNotEquals(0, book1Id);
-        Assert.assertNotEquals(0, book2Id);
-        Assert.assertNotEquals(0, book3Id);
-
-        Assert.assertNotEquals(0, bookTag1Id);
-        Assert.assertNotEquals(0, author1Id);
+        Assert.assertNotEquals(0, objectNameBookId);
+        Assert.assertNotEquals(0, booktag1id);
 
         //CleanUp
         try {
             bookService.deleteBook(book1Id);
-            bookService.deleteBook(book2Id);
-            bookService.deleteBook(book3Id);
+            bookTagService.deleteBookTag(booktag1id);
+
         } catch (Exception e) {
             //nothing
         }
     }
 
+
     @Test
-    public void testUpdateBookWithAuthorAndBookTag() {
+    public void testSaveBookWithAuthorAndBookTag() throws InvalidClassException {
         //Given
-        Book romeoAndJuliet = new Book("Romeo and Juliet", "196003");
+        BookTag fantasy = new BookTag("fantasy");
+
+        Author brzechwa  = new Author("Brzechwa","Jan");
+        ObjectName objectNameAuthor = new ObjectName("Jan Brzechwa", brzechwa);
+        brzechwa.setObjectNameAuthor(objectNameAuthor);
+
+        Book kaczka_Dziwaczka = new Book("Kaczka Dziwaczka","200004",2000,3);
+        ObjectName objectName = new ObjectName("Kaczka Dziwaczka", kaczka_Dziwaczka);
+        kaczka_Dziwaczka.setObjectName(objectName);
+
+        kaczka_Dziwaczka.getBookTags().add(fantasy);
+
+        fantasy.getBooks().add(kaczka_Dziwaczka);
+
+        kaczka_Dziwaczka.getAuthors().add(brzechwa);
+
+        brzechwa.getBooks().add(kaczka_Dziwaczka);
+
+        //When
+        bookService.saveBook(kaczka_Dziwaczka);
+        long book1Id = kaczka_Dziwaczka.getId();
+        long objectNameBookId = kaczka_Dziwaczka.getObjectName().getId();
+
+        long booktag1id = fantasy.getId();
+
+        long author1Id = brzechwa.getId();
+        long objectNameAuthorId = brzechwa.getObjectNameAuthor().getId();
 
 
-       // bookService.saveBook(romeoAndJuliet);
+        //Then
+        Assert.assertNotEquals(0, book1Id);
+        Assert.assertNotEquals(0, objectNameBookId);
+
+        Assert.assertNotEquals(0, booktag1id);
+
+
+        //Assert.assertNotEquals(0, bookTag1Id);
+        Assert.assertNotEquals(0, author1Id);
+        Assert.assertNotEquals(0, objectNameAuthorId);
+
+        //CleanUp
+        try {
+            //bookService.deleteBook(book1Id);
+            bookService.deleteBook(book1Id);
+            authorService.deleteAuthor(author1Id);
+            bookTagService.deleteBookTag(booktag1id);
+        } catch (Exception e) {
+            //nothing
+        }
+    }
+
+
+    @Test
+    public void testUpdateBookWithObjectName() throws InvalidClassException {
+        //Given
+        Book romeoAndJuliet = new Book("Romeo and Juliet","200002",1900, 1);
+        ObjectName objectName = new ObjectName("Romeo and Juliet", romeoAndJuliet);
+        romeoAndJuliet.setObjectName(objectName);
+
         String title = romeoAndJuliet.getTitle();
         String signature = romeoAndJuliet.getSignature();
 
+        bookService.saveBook(romeoAndJuliet);
         long bookId = romeoAndJuliet.getId();
 
         //When
         Book modified = bookService.getBook(bookId).orElse(null);
         modified.setTitle("Juliet");
         modified.setSignature("200001");
+        modified.getObjectName().setName("Juliet");
 
-        //bookService.saveBook(modified);
+
+        bookService.saveBook(modified);
         String title2 = modified.getTitle();
         String signature2 = modified.getSignature();
-
-        //List<Book> bookList = bookService.getAllBooks(1,10);
-
         //Then
-        assertNotNull(modified);
-        Assert.assertNotEquals(romeoAndJuliet, modified);
+
+
+        Assert.assertNotEquals(objectName.getName(),"Juliet");
         Assert.assertNotEquals(title, title2);
         Assert.assertNotEquals(signature, signature2);
 
-       // Assert.assertEquals(1, bookList.size());
-
         //CleanUp
-        bookService.deleteBook(bookId);
+        try {
+           bookService.deleteBook(bookId);
+        }
+        catch (Exception e) {
+            //nothing
+        }
     }
 
     @Test
-    public void deleteBook() {
+    public void deleteBookWithObjectName() throws InvalidClassException {
         //Given
-        Book romeoAndJuliet = new Book("Romeo and Juliet", "196003");
+        Book romeoAndJuliet = new Book("Romeo and Juliet", "200003", 1900, 1);
+        ObjectName objectName = new ObjectName("Romeo and Juliet", romeoAndJuliet);
+        romeoAndJuliet.setObjectName(objectName);
 
-       // bookService.saveBook(romeoAndJuliet);
+        bookService.saveBook(romeoAndJuliet);
         long bookId = romeoAndJuliet.getId();
 
         //When
-        bookService.deleteBook(bookId);
+        List<Book> books = bookService.getAllBooks(Pageable.unpaged());
+        List<ObjectName> objectNames = objectService.getAllObjectName();
 
-        //List<Book> bookList = bookService.getAllBooks(1,10);
+        try {
+            bookService.deleteBook(bookId);
+        } catch (Exception e) {
+            //nothing
+        }
+        List<Book> booksAfterDelete = bookService.getAllBooks(Pageable.unpaged());
+        List<ObjectName> objectNamesAfterDeleted = objectService.getAllObjectName();
+
 
         //Then
-        //Assert.assertEquals(0, bookList.size());
+        Assert.assertNotEquals(books.size(), booksAfterDelete.size());
+        Assert.assertNotEquals(objectNames.size(), objectNamesAfterDeleted.size());
 
     }
-
-
 }
 
 

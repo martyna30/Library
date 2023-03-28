@@ -2,16 +2,10 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /*@NamedQuery(
          name = "Author.findIdByAuthorName",
@@ -33,16 +27,19 @@ public class Author {
     private String surname;
     private String forename;
 
-    //private ObjectName objectNameAuthor;
+    private ObjectName objectNameAuthor;
     private List<Book> books = new ArrayList<>();
 
-
+    private static Author author;
 
     public Author(Long id, String surname, String forename) {
         this.id = id;
         this.surname = surname;
         this.forename = forename;
-        //this.objectNameAuthor = objectNameAuthor;
+    }
+    public Author(String surname, String forename) {
+        this.surname = surname;
+        this.forename = forename;
     }
 
     @Id
@@ -62,19 +59,18 @@ public class Author {
         return forename;
     }
 
-
-
-   /* @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "OBJECT_NAME_AUTHOR_ID")
     public ObjectName getObjectNameAuthor() {
         return objectNameAuthor;
-    }*/
+    }
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany (cascade = CascadeType.ALL,
+            mappedBy = "authors"
+    )
     public List<Book> getBooks() {
         return books;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -92,5 +88,13 @@ public class Author {
         this.books = books;
     }
 
+    public void setObjectNameAuthor(ObjectName objectNameAuthor) {
+        this.objectNameAuthor = objectNameAuthor;
+    }
 
+    public static Author getAuthor() {
+        return author;
+    }
 }
+
+

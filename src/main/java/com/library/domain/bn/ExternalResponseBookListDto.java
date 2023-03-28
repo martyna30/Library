@@ -15,9 +15,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExternalResponseBookListDto {
 
-
-   // List<ExternalResponseBookDto> lists;
-
     @JsonProperty("nextPage")
     private String nextPage;
 

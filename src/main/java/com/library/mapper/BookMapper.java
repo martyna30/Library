@@ -34,9 +34,7 @@ public class BookMapper {
                 bookDto.getAmountOfBook(),
                 bookDto.getSignature(),
                 bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
-                authorMapper.mapToAuthorsList(bookDto.getAuthors())
-                //objectMapper.mapToObject(bookDto.getObjectsNameDto())
-        );
+                authorMapper.mapToAuthorsList(bookDto.getAuthors()));
     }
 
     public BookDto mapToBookDto(Book book) {
@@ -48,8 +46,7 @@ public class BookMapper {
                 book.getAmountOfBook(),
                 bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
                 authorMapper.mapToAuthorsDtoList(book.getAuthors())
-                // rentalMapper.mapToRentalDtoList(book.getBorrowedBooks()),
-                //objectMapper.mapToObjectDto(book.getObjectsName())
+
         );
     }
 
@@ -63,8 +60,6 @@ public class BookMapper {
                         bookDto.getSignature(),
                         bookTagMapper.mapToBookTagsList(bookDto.getBookTags()),
                         authorMapper.mapToAuthorsList(bookDto.getAuthors())))
-                        //bookDto.getBorrowedBooks(),
-                        //objectMapper.mapToObject(bookDto.getObjectsNameDto())))
                 .collect(Collectors.toList());
     }
 
@@ -79,8 +74,6 @@ public class BookMapper {
                         book.getAmountOfBook(),
                         bookTagMapper.mapToBookTagsDtoList(book.getBookTags()),
                         authorMapper.mapToAuthorsDtoList(book.getAuthors())))
-                        //rentalMapper.mapToRentalDtoList(book.getBorrowedBooks()),
-                        //objectMapper.mapToObjectDto(book.getObjectsName())))
                 .collect(Collectors.toList());
         return bookDtos;
     }

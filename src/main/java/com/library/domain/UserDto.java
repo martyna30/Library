@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
-    //private Long id;
+    private Long id;
     @NotBlank(groups= NotEmptyGroup.class, message = "Please enter your username")
     @Size(groups= LengthOfCharacters.class, min = 3, max = 30, message = "Length username must be between 3 and 30 characters")
     private String username;

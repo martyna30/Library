@@ -21,7 +21,4 @@ public class LoggedUserDto {
 
     private String username;
 
-    //private String password;
-
-
 }

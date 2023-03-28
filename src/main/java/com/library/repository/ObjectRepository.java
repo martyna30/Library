@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface ObjectRepository extends CrudRepository<ObjectName, Long> {
 
-
-    List<ObjectName> findAllByName(String objectToSearch);
+    @Override
+    List<ObjectName> findAll();
 
 
     Optional<ObjectName> findByName(String objectToSearch);
@@ -22,7 +22,11 @@ public interface ObjectRepository extends CrudRepository<ObjectName, Long> {
     @Override
     ObjectName save(ObjectName objectName);
 
+    @Override
+    void deleteById(Long id);
 
+    List<ObjectName> findAllByName(String name);
 
-
+    @Override
+    Optional<ObjectName> findById(Long id);
 }

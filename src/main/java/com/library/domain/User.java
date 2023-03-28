@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +18,21 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+
+@NamedQuery(
+        name = "User.retrieveUserWithRental",
+        query = "FROM User WHERE  USER_ID LIKE : BOOK_ID AND USER_ID LIKE: USER_ID"
+)
+
+
+
+
+
+
+
+
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -23,24 +40,21 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "USER")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID", unique = true)
+
     private Long id;
-    @NotNull
-    @Column(name = "USERNAME")
+
     private String username;
-    @Column(name = "EMAIL")
+
     private String email;
-    @Column(name = "PASSWORD")
+
     private String password;
 
     private String role;
 
-    @Column(name = "LOCKED")
+
     private boolean locked = false;
 
-    @Column(name = "ENABLED")
+
     private boolean enabled = false;
 
     private List<Rental> borrowedBooks = new ArrayList<>();
@@ -62,7 +76,6 @@ public class User {
         this.username = username;
     }
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID", unique = true)
@@ -70,40 +83,53 @@ public class User {
         return id;
     }
 
+    @Column
+    public String getUsername() {
+        return username;
+    }
+    @Column(name = "EMAIL")
+    public String getEmail() {
+        return email;
+    }
+    @Column(name = "PASSWORD")
+    public String getPassword() {
+        return password;
+    }
+
+
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(
-            targetEntity = Rental.class,//prawa strona relacji 1:n
-            mappedBy = "user",//obiekt po lewej 1 :n
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.LAZY
+            cascade = {CascadeType.ALL}//to
     )
+    @JoinColumn(name = "USER_ID")
     public List<Rental> getBorrowedBooks() {
         return borrowedBooks;
     }
 
-
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(
             targetEntity = ConfirmationToken.class,//prawa strona relacji 1:n
             mappedBy = "user",//obiekt po lewej 1 :n
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
-            fetch = FetchType.LAZY
+            cascade = {CascadeType.ALL}
     )
     public List<ConfirmationToken> getConfirmationTokens() {
         return confirmationTokens;
     }
 
-
-
-
-    /*@Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-             return Arrays.stream(role.name().split(","))
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-        }*/
-    //@Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
     public String getRole() {
         return role;
+    }
+
+
+    @Column(name = "LOCKED")
+    public boolean isLocked() {
+        return locked;
+    }
+
+    @Column(name = "ENABLED")
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void setRole(String role) {
@@ -116,6 +142,30 @@ public class User {
 
     public void setConfirmationTokens(List<ConfirmationToken> confirmationTokens) {
         this.confirmationTokens = confirmationTokens;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 

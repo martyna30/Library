@@ -28,7 +28,6 @@ public class ValidationClass {
 
     public void validate() {
         AuthorDto authorDto = new AuthorDto();
-        //BookTagDto bookTagDto = new BookTagDto();
         BookDto bookDto = new BookDto();
         Set<ConstraintViolation<AuthorDto>> errorsListAuthors = validator.validate(authorDto);
         Set<ConstraintViolation<BookDto>> errorsListBooks = validator.validate(bookDto);

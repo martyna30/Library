@@ -8,7 +8,6 @@ import com.library.exception.ObjectNameNotFoundException;
 import com.library.validationGroup.OrderChecks;
 import com.library.validationGroup.OrderChecks2;
 import com.library.mapper.BookMapper;
-import com.library.repository.BooksRepository;
 import com.library.service.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,18 +38,11 @@ public class BookController {
     private BookService bookService;
 
     @Autowired
-    private BooksRepository booksRepository;
-
-    @Autowired
     private BookMapper bookMapper;
 
-    @GetMapping
-   // ResponseBody
+
     @RequestMapping(method = RequestMethod.GET, value = "getBooks")
     public ResponseEntity<ListBookDto> getBooks(@RequestParam int page, @RequestParam int size) {
-        //@PathVariable("sortDir") String sortDir,
-        //@PathVariable("sort") String sort) {
-
         PageRequest pageRequest = PageRequest.of(page, size);
 
         return ResponseEntity.ok(
@@ -74,7 +66,6 @@ public class BookController {
     }
 
     @DeleteMapping( value = "deleteBook", consumes = APPLICATION_JSON_VALUE)
-    //@RequestMapping(method = RequestMethod.DELETE, value = "deleteBook", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<?>deleteBook(@RequestParam Long bookId) {
         try{
             bookService.deleteBook(bookId);
@@ -108,9 +99,7 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = APPLICATION_JSON_VALUE)
-//consumes do danych wejsciowych zadania
-    public ResponseEntity<Object> createBook(@Validated(value = {OrderChecks.class}) @Valid @RequestBody BookDto bookDto
-            , Errors errors) throws ObjectNameNotFoundException, InvalidClassException {
+    public ResponseEntity<Object> createBook(@Validated(value = {OrderChecks.class}) @Valid @RequestBody BookDto bookDto, Errors errors) throws ObjectNameNotFoundException, InvalidClassException {
 
         if (errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
@@ -126,10 +115,9 @@ public class BookController {
             return new ResponseEntity<>(errorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-            bookService.saveBook(bookMapper.mapToBook(bookDto));
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-
+        bookService.saveBook(bookMapper.mapToBook(bookDto));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
 
 

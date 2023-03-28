@@ -69,8 +69,19 @@ public class UserService implements UserDetailsService {
                     throw new IllegalStateException("email already taken and confirmed");
                 }
             }
-        }
+            else {
+                String token = UUID.randomUUID().toString();
 
+                ConfirmationToken confirmationToken = new ConfirmationToken(
+                        token,
+                        LocalDateTime.now(),
+                        LocalDateTime.now().plusMinutes(15),
+                        user
+                );
+                confirmationTokenService.saveConfirmationToken(confirmationToken);
+                return token;
+            }
+        }
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 

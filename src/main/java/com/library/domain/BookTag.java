@@ -40,14 +40,12 @@ public class BookTag {
         return id;
     }
 
-    //@NotNull
-    //@Size(min = 3, max = 20)
     @Column(name = "LITERARY_GENRE")
     public String getLiteraryGenre() {
         return literaryGenre;
     }
 
-    @ManyToMany (
+    @ManyToMany (fetch = FetchType.EAGER,
             mappedBy = "bookTags"
     )
     public List<Book> getBooks() {

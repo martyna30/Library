@@ -28,22 +28,23 @@ public class RentalMapper {
                 rentalDto.getStartingDate(),
                 rentalDto.getFinishDate(),
                 rentalDto.getAmountOfBorrowedBooks(),
-                rentalDto.getStatus(),
-                this.loggedUserMapper.mapToUser(rentalDto.getLoggedUserDto()),
-                this.bookMapper.mapToBook(rentalDto.getBookDto())
+                rentalDto.getStatus()
+               // this.loggedUserMapper.mapToUser(rentalDto.getLoggedUserDto())
+                //this.bookMapper.mapToBook(rentalDto.getBookDto())
 
         );
     }
 
     public RentalDto mapToRentalDto(Rental rental) {
         return new RentalDto(
+                rental.getId(),
                 rental.getTitle(),
                 rental.getStartingDate(),
                 rental.getFinishDate(),
                 rental.getAmountOfBorrowedBooks(),
-                rental.getStatus(),
-                loggedUserMapper.mapToLoggedUserDto(rental.getUser()),
-                bookMapper.mapToBookDto(rental.getBook())
+                rental.getStatus()
+                //loggedUserMapper.mapToLoggedUserDto(rental.getUser())
+               // bookMapper.mapToBookDto(rental.getBook())
         );
 
     }
@@ -51,13 +52,14 @@ public class RentalMapper {
     public List<RentalDto> mapToRentalDtoList(final List<Rental> borrowedBooks) {
         return borrowedBooks.stream()
                 .map(rental-> new RentalDto(
+                        rental.getId(),
                         rental.getTitle(),
                         rental.getStartingDate(),
                         rental.getFinishDate(),
                         rental.getAmountOfBorrowedBooks(),
-                        rental.getStatus(),
-                        loggedUserMapper.mapToLoggedUserDto(rental.getUser()),
-                        bookMapper.mapToBookDto(rental.getBook())))
+                        rental.getStatus()))
+                       // loggedUserMapper.mapToLoggedUserDto(rental.getUser())))
+                       // bookMapper.mapToBookDto(rental.getBook())))
                 .collect(Collectors.toList());
     }
 
@@ -68,9 +70,9 @@ public class RentalMapper {
                         rentalDto.getStartingDate(),
                         rentalDto.getFinishDate(),
                         rentalDto.getAmountOfBorrowedBooks(),
-                        rentalDto.getStatus(),
-                        this.loggedUserMapper.mapToUser(rentalDto.getLoggedUserDto()),
-                        this.bookMapper.mapToBook(rentalDto.getBookDto())))
+                        rentalDto.getStatus()))
+                       // this.loggedUserMapper.mapToUser(rentalDto.getLoggedUserDto())))
+                        //this.bookMapper.mapToBook(rentalDto.getBookDto())))
                 .collect(Collectors.toList());
     }
 }

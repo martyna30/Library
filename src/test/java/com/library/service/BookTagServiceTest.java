@@ -32,14 +32,11 @@ public class BookTagServiceTest {
         bookTagService.saveBookTag(fiction);
         long id = fiction.getId();
 
-        List<BookTag> bookTagsList = bookTagService.getAllBookTags();
-
         Optional<BookTag> bookTags = bookTagService.getBookTag(id);
 
         //Then
         Assert.assertTrue(bookTags.isPresent());
         Assert.assertNotNull(fiction);
-        assertEquals(1, bookTagsList.size());
 
         //CleanUp
         bookTagService.deleteBookTag(id);
@@ -61,16 +58,12 @@ public class BookTagServiceTest {
         bookTagService.saveBookTag(modified);
         String literaryGenre2 = modified.getLiteraryGenre();
 
-        List<BookTag>bookTagList = bookTagService.getAllBookTags();
-
         //Then
         assertNotNull(modified);
         assertNotEquals(literaryGenre, literaryGenre2);
-        assertEquals(1, bookTagList.size());
 
         //CleanUp
         bookTagService.deleteBookTag(id);
-
     }
 
     @Test
@@ -81,13 +74,15 @@ public class BookTagServiceTest {
         bookTagService.saveBookTag(fiction);
         long id = fiction.getId();
 
+        List<BookTag>bookTagList = bookTagService.getAllBookTags();
+
         //When
         bookTagService.deleteBookTag(id);
 
-        List<BookTag>bookTagList = bookTagService.getAllBookTags();
+        List<BookTag>bookTagListAfterDeleted = bookTagService.getAllBookTags();
 
         //Then
-        Assert.assertEquals(0, bookTagList.size());
+        Assert.assertNotEquals( bookTagList.size(), bookTagListAfterDeleted.size());
     }
 
 }

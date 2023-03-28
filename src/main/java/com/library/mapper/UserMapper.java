@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapper {
 
-    //public User(Long id, String username,String password, String role, boolean isEnabled) {
-
     public User mapToUser(UserDto userDto) {
         return new User(
                 userDto.getUsername(),
@@ -21,10 +19,9 @@ public class UserMapper {
         );
     }
 
-
-
     public UserDto mapToUserDto(User user) {
         return new UserDto(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
@@ -32,8 +29,6 @@ public class UserMapper {
         );
 
     }
-
-
 
     public List<User>mapToUsersList(final List<UserDto>usersListDTo) {
         return usersListDTo.stream()
@@ -48,6 +43,7 @@ public class UserMapper {
     public List<UserDto>mapToUsersDtoList(final List<User>usersList) {
         return usersList.stream()
                 .map(user -> new UserDto(
+                        user.getId(),
                         user.getUsername(),
                         user.getPassword(),
                         user.getEmail(),

@@ -60,12 +60,12 @@ public class SecurityController {
     @Autowired
     RegistrationService registrationService;
 
-   @Autowired
-   JwtToken jwtToken;
+    @Autowired
+    JwtToken jwtToken;
 
 
-    @PostMapping  ("/token/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @PostMapping("/token/refresh")
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String header = request.getHeader(AUTHORIZATION);
         if (header != null && header.startsWith("Bearer ")) {
             try {
@@ -77,18 +77,18 @@ public class SecurityController {
                 UserDetails user = userService.loadUserByUsername(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 2 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 80 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .sign(algorithm);
-
+                System.out.println(request.getRequestURL().toString());
                 response.setHeader("access_token", access_token);
 
-                Map<String, String> tokens =  new HashMap<>();
+                Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-
+                return access_token;
             } catch (Exception ex) {
                 logger.error("Error loggin in: {}", new Throwable(ex.getMessage()));
                 response.setHeader("error", ex.getMessage());
@@ -98,20 +98,20 @@ public class SecurityController {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
         }
-        else {
-           throw new RuntimeException("Refresh token is missing");
-        }
+        return header;
     }
 
     @PostMapping("/logout")
-    public  ResponseEntity<Object> logout(HttpServletResponse response) throws Exception {
+    public ResponseEntity<Object> logout(HttpServletResponse response) throws Exception {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping ("/login")
-    public  ResponseEntity<Object> login(@Validated(value = {OrderChecks.class}) @Valid @RequestBody UserDto userDto, Errors errors,
-                                         HttpServletRequest request, HttpServletResponse response ) throws Exception {
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@Validated(value = {OrderChecks.class}) @Valid @RequestBody UserDto userDto, Errors errors,
+                                        HttpServletRequest request, HttpServletResponse response) throws Exception {
         String jwToken = "";
 
         if (errors.hasErrors()) {
@@ -139,50 +139,33 @@ public class SecurityController {
                     );
             MyUserDetails userIn = (MyUserDetails) authentication.getPrincipal();
             jwToken = jwtToken.generateToken(userIn, request, response);
+        } catch (BadCredentialsException ex) {
+
+            return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
-        catch (BadCredentialsException ex) {
-
-            return new ResponseEntity<>( "Incorrect username or password", HttpStatus.BAD_REQUEST);
-        }
-            return new ResponseEntity<>(jwToken, HttpStatus.CREATED);
+        return new ResponseEntity<>(jwToken, HttpStatus.CREATED);
     }
-
-
-
-
-        /*request.getParameter(username);
-        if (errors.hasErrors()) {
-            Map<String, ArrayList> errorsLoggingMap = new HashMap<>();
-
-            errors.getFieldErrors().stream().forEach(fieldError -> {
-                String key = fieldError.getField();
-                String value= fieldError.getDefaultMessage();
-                if(!errorsLoggingMap.containsKey(key)) {
-                   errorsLoggingMap.put(key, new ArrayList<>());
-                }
-                errorsLoggingMap.get(key).add(fieldError.getDefaultMessage());
-            });
-            errorsLoggingMap.values().stream().findFirst();
-            System.out.println( errorsLoggingMap.values().stream().findFirst().get());
-        }*/
-
-
-    @PostMapping("/auth")
-    public String auth(@RequestBody String token) throws Exception {
-        return "Authorize";
-    }
-
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterCredentialsDto registerCredentialsDto) throws Exception {
-        return registrationService.register(registerCredentialsDto);
+        try {
+            registrationService.register(registerCredentialsDto);
+            return "User has been registered";
+        } catch (Exception e) {
+            System.out.println("User hasn't been registered");
+            return e.getMessage();
+        }
     }
 
-     @GetMapping(path = "/register/confirm")
-     public String confirm(@RequestParam("token") String token) {
-        return registrationService.confirmToken(token);
-
+    @GetMapping(path = "/register/confirm")
+    public String confirm(@RequestParam("token") String token) {
+        try {
+            registrationService.confirmToken(token);
+            return "Token has been confirmed";
+        } catch (Exception e) {
+            System.out.println("Token hasn't been confirmed");
+            return e.getMessage();
         }
-
+    }
 }
 

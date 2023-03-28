@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.InvalidClassException;
 import java.util.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -64,7 +65,7 @@ public class AuthorController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateAuthor")
-    public ResponseEntity<Object> updateAuthor(@Validated(value = {OrderChecks.class}) @Valid @RequestBody AuthorDto authorDto, Errors errors) {
+    public ResponseEntity<Object> updateAuthor(@Validated(value = {OrderChecks.class}) @Valid @RequestBody AuthorDto authorDto, Errors errors) throws InvalidClassException {
         if(errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsAuthorsMap = new HashMap<>();
 
@@ -83,7 +84,7 @@ public class AuthorController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createAuthor")
-    public ResponseEntity<Object> createAuthor(@Validated(value = {OrderChecks.class}) @Valid @RequestBody AuthorDto authorDto, Errors errors) {
+    public ResponseEntity<Object> createAuthor(@Validated(value = {OrderChecks.class}) @Valid @RequestBody AuthorDto authorDto, Errors errors) throws InvalidClassException {
         if(errors.hasErrors()) {
             Map<String, ArrayList<Object>> errorsAuthorsMap = new HashMap<>();
 

@@ -19,6 +19,11 @@ public class BookTagService {
 
     }
     public BookTag saveBookTag(final BookTag bookTag) {
+        Optional<BookTag> bookTagOptional = bookTagRepository.findBookTagByName(bookTag.getLiteraryGenre());
+        if (bookTagOptional.isPresent()) {
+            bookTag.setId(bookTagOptional.get().getId());
+            return bookTagRepository.save(bookTag);
+        }
         return bookTagRepository.save(bookTag);
     }
 

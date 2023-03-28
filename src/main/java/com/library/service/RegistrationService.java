@@ -32,13 +32,11 @@ public class RegistrationService {
     @Autowired
     private EmailService emailService;
 
-
     public String register(RegisterCredentialsDto registerCredentials) throws MessagingException {
         boolean isValidEmail = emailValidator.test(registerCredentials.getEmail());
         if(!isValidEmail) {
             throw new IllegalStateException("Email not valid");
         }
-
         String token = userService.signUpUser(
                 new User(
                         registerCredentials.getUsername(),
@@ -49,7 +47,7 @@ public class RegistrationService {
         );
         String link = "http://localhost:8080/v1/library/register/confirm?token=" + token;
         emailService.send(registerCredentials.getEmail(), link);
-        return "register";
+        return token;
     }
     @Transactional
     public String confirmToken(String token) {
@@ -68,14 +66,10 @@ public class RegistrationService {
         }
         confirmationToken.setConfirmedAt(LocalDateTime.now());
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-
         User user = userRepository.findById(confirmationToken.getUser().getId()).get();
         user.setEnabled(true);
-        userRepository.save(user);
-
+        userService.saveUser(user);
         return "Token confirmed";
-
     }
 }
 

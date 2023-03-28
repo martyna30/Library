@@ -6,6 +6,8 @@ import com.library.exception.UserNotFoundException;
 import com.library.mapper.UserMapper;
 import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +24,6 @@ public class UserController {
     @Autowired
     UserMapper userMapper;
 
-
-    //@Autowired
-   // jwtService jwtService;
-
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -37,13 +35,13 @@ public class UserController {
 
     @GetMapping("getUser")
     public UserDto getUser(@RequestParam Long userId) throws UserNotFoundException {
-
         return userMapper.mapToUserDto(userService.getUser(userId).orElseThrow(UserNotFoundException::new));
     }
 
     @DeleteMapping("deleteUser")
-    public void deleteUser(@RequestParam Long userId) {
+    public ResponseEntity<Object> deleteUser(@RequestParam Long userId) {
         userService.deleteUser(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("updateUser")
@@ -52,8 +50,8 @@ public class UserController {
     }
 
     @PostMapping("createUser")
-    public void createUser(@Valid @RequestBody UserDto userDto) {
-        userService.saveUser(userMapper.mapToUser(userDto));
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+        return userMapper.mapToUserDto((User) userService.saveUser(userMapper.mapToUser(userDto)));
     }
 
 

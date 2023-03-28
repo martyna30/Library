@@ -21,5 +21,4 @@ public class BookTagDto {
     @NotBlank(groups= NotEmptyGroup.class, message ="Field can remain empty")
     @Size(groups= LengthOfCharacters.class, min = 3, max = 30, message = "Length of literary genre must be between 3 and 30 characters")
     private String literaryGenre;
-    //private List<BookDto> books = new ArrayList<>();
 }

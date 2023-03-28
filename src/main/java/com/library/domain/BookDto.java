@@ -31,7 +31,6 @@ public class BookDto {
     private Long id;
 
     @NotBlank(groups= NotEmptyGroup.class, message = "Field can remain empty")
-    //@Size(groups= LengthOfCharacters.class, min = 3, max = 30, message = "Length title of the book must be between 3 and 30 characters")
     private String title;
 
     @NotNull(groups= NotEmptyGroup.class, message = "Field can remain empty")
@@ -51,8 +50,6 @@ public class BookDto {
     private List<BookTagDto> bookTags = new ArrayList<>();
     @Valid
     private List<AuthorDto> authors = new ArrayList<>();
-
-    //private List<RentalDto> borrowedBooks = new ArrayList<>();
 
 
 

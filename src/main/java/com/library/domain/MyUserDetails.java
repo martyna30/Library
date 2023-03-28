@@ -20,12 +20,7 @@ public class MyUserDetails implements UserDetails {
 
     private boolean enabled;
 
-    //User user;
-
     private Collection<SimpleGrantedAuthority> authorities;
-
-
-
 
     public MyUserDetails(User user) {
         this.username = user.getUsername();
@@ -37,9 +32,6 @@ public class MyUserDetails implements UserDetails {
         this.authorities = Arrays.stream(user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-
-        System.out.println(authorities);
-
     }
 
     public MyUserDetails(String username, String password, Collection<SimpleGrantedAuthority> authorities) {
@@ -68,9 +60,6 @@ public class MyUserDetails implements UserDetails {
     public String getUsername() {
         return username;
     }
-
-
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -104,5 +93,7 @@ public class MyUserDetails implements UserDetails {
         this.password = password;
     }
 
-
+    public void setAuthorities(Collection<SimpleGrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 }

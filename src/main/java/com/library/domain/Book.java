@@ -1,9 +1,14 @@
 package com.library.domain;
 
+import com.library.domain.bn.TypeOfObject;
 import com.library.validationGroup.Format;
 import com.library.validationGroup.NotEmptyGroup;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 import javax.persistence.*;
@@ -72,6 +77,8 @@ public class Book {
     private String signature;
     private int amountOfBook;
 
+    private ObjectName objectName;
+
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
     private List<Rental> borrowedBooks = new ArrayList<>();
@@ -84,9 +91,16 @@ public class Book {
         this.amountOfBook = amountOfBook;
         this.bookTags = bookTags;
         this.authors = authors;
-        //this.objectName = objectName;
     }
 
+
+    public Book(String title,String signature, int yearOfPublication, int amountOfBook) {
+        this.title = title;
+        this.signature = signature;
+        this.yearOfPublication = yearOfPublication;
+        this.amountOfBook = amountOfBook;
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,20 +125,24 @@ public class Book {
     public String getSignature() {
         return signature;
     }
+    //@LazyCollection(LazyCollectionOption.FALSE)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "OBJECT_NAME_ID", unique = true) //
+    public ObjectName getObjectName() {
+      return objectName;
+    }
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(
+            cascade = {CascadeType.ALL})
+    @JoinColumn(name = "BOOK_ID")//,//referencedColumnName = "id",unique = true)//tu zmieniam
+    public List<Rental> getBorrowedBooks() {
+        return borrowedBooks;
+    }  //tu zmieniam
 
-    /*@OneToOne(cascade = {CascadeType.ALL },fetch = FetchType.EAGER)
-    @JoinColumn(name = "OBJECT_NAME_BOOK_ID")
-    public ObjectName getObjectsName() {
-        return objectName;
-    }*/
-
-
-    ///lazy pobieramy dane dopiero wtedy, gdy ich potrzebujemy.
-    // gdy użyjemy gettera na powiązanej kolekcji, Hibernate wykonuje zapytanie do bazy danych.
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
     @JoinTable(
-
             name ="JOIN_BOOK_TAGS",
             joinColumns ={@JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID")},
             inverseJoinColumns = {@JoinColumn(name = "BOOK_TAG_ID", referencedColumnName = "BOOK_TAG_ID")}
@@ -132,8 +150,8 @@ public class Book {
     public List<BookTag> getBookTags() {
         return bookTags;
     }
-
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
         @JoinTable(
             name ="JOIN_BOOK_AUTHORS",
             joinColumns = {@JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID")},
@@ -142,16 +160,6 @@ public class Book {
     public List<Author> getAuthors() {
         return authors;
     }
-    @OneToMany(
-            targetEntity = Rental.class,//prawa strona relacji 1:n
-            mappedBy = "book",//obiekt po lewej 1 :n
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-            fetch = FetchType.LAZY
-    )
-    public List<Rental> getBorrowedBooks() {
-        return borrowedBooks;
-    }
-
 
     public int getAmountOfBook() {
         return amountOfBook;
@@ -177,6 +185,10 @@ public class Book {
         this.signature = signature;
     }
 
+    public void setObjectName(ObjectName objectName) {
+        this.objectName = objectName;
+    }
+
     public void setBookTags(List<BookTag> bookTags) {
         this.bookTags = bookTags;
     }
@@ -188,8 +200,6 @@ public class Book {
     public void setBorrowedBooks(List<Rental> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
     }
-
-
 
 
 }

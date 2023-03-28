@@ -25,21 +25,7 @@ public class EmailService implements EmailSender {
         this.javaMailSender = javaMailSender;
     }
 
-
-    /*@SendMail
-    public void sendMail(String to,
-                         String subject,
-                         String text,
-                         boolean isHtmlContent) throws MessagingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-        mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setText(text, isHtmlContent);
-        javaMailSender.send(mimeMessage);
-    }*/
-
-   @Override
+    @Override
     @Async
     public void send(String to, String link) {
 
@@ -51,7 +37,7 @@ public class EmailService implements EmailSender {
             mimeMessageHelper.setSubject("Confirm your email");
             mimeMessageHelper.setFrom("martyna.prawdzik@gmail.com");
             javaMailSender.send(mimeMessage);
-
+            LOGGER.info("Email has been sent");
         } catch (MessagingException e) {
             LOGGER.error("Failed to send email", e);
             throw new IllegalStateException("Failed to send email");
