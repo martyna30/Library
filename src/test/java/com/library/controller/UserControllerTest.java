@@ -104,16 +104,13 @@ public class UserControllerTest {
         userDto.setId(1L);
         userDto.setPassword("111");
         userDto.setRole("USER");
-
-        when(userController.updateUser(userDto)).thenReturn(userDto);
-
         //when
-        UserDto userDtoResult= userController.updateUser(userDto);
+        ResponseEntity<UserDto> usersResult = userController.updateUser(userDto);
 
         //then
-        Assert.assertNotNull(userDtoResult);
-        Assert.assertEquals(userDto.getUsername(), userDtoResult.getUsername());
-        Assert.assertEquals("Antoni", userDtoResult.getUsername());
+        Assert.assertNotNull(usersResult);
+        Assert.assertEquals(HttpStatus.CREATED.value(), usersResult.getStatusCodeValue());
+        Assert.assertEquals("Antoni", userDto.getUsername());
     }
 
     @Test
@@ -125,15 +122,13 @@ public class UserControllerTest {
         userDto.setPassword("111");
         userDto.setRole("USER");
 
-        when(userController.updateUser(userDto)).thenReturn(userDto);
-
         //when
-        UserDto userDtoResult = userController.updateUser(userDto);
+        ResponseEntity<UserDto> usersResult = userController.createUser(userDto);
 
         //then
-        Assert.assertNotNull(userDtoResult);
-        Assert.assertEquals(userDto.getUsername(), userDtoResult.getUsername());
-        Assert.assertEquals("Antoni", userDtoResult.getUsername());
+        Assert.assertNotNull(usersResult);
+        Assert.assertEquals(HttpStatus.CREATED.value(), usersResult.getStatusCodeValue());
+        Assert.assertEquals("Antoni", userDto.getUsername());
     }
 
 

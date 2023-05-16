@@ -27,12 +27,6 @@ import java.util.stream.Collectors;
 
 
 
-
-
-
-
-
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -99,11 +93,11 @@ public class User {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(
-            cascade = {CascadeType.ALL}//to
+            cascade = {CascadeType.ALL}
     )
     @JoinColumn(name = "USER_ID")
     public List<Rental> getBorrowedBooks() {
-        return borrowedBooks;
+       return borrowedBooks;
     }
 
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -136,9 +130,6 @@ public class User {
         this.role = role;
     }
 
-    public void setBorrowedBooks(List<Rental> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
 
     public void setConfirmationTokens(List<ConfirmationToken> confirmationTokens) {
         this.confirmationTokens = confirmationTokens;
@@ -168,7 +159,9 @@ public class User {
         this.enabled = enabled;
     }
 
-
+    public void setBorrowedBooks(List<Rental> borrowedBooks) {
+        this.borrowedBooks = borrowedBooks;
+    }
 }
 
 

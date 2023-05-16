@@ -6,10 +6,12 @@ import com.library.exception.UserNotFoundException;
 import com.library.mapper.UserMapper;
 import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -40,18 +42,33 @@ public class UserController {
 
     @DeleteMapping("deleteUser")
     public ResponseEntity<Object> deleteUser(@RequestParam Long userId) {
-        userService.deleteUser(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            userService.deleteUser(userId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        catch (EmptyResultDataAccessException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("updateUser")
-    public UserDto updateUser(@RequestBody UserDto userDto) {
-        return userMapper.mapToUserDto((User) userService.saveUser(userMapper.mapToUser(userDto)));
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
+        try {
+            userMapper.mapToUserDto((User) userService.saveUser(userMapper.mapToUser(userDto)));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @PostMapping("createUser")
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        return userMapper.mapToUserDto((User) userService.saveUser(userMapper.mapToUser(userDto)));
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        try {
+            userMapper.mapToUserDto((User) userService.saveUser(userMapper.mapToUser(userDto)));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
 

@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
@@ -55,21 +56,28 @@ public class RentalServiceTest {
         //Given
         User user = new User("Maria", "123", "maria@gmail.com", "USER");
         Book jasImalgosia = new Book("Jaś i Małgosia","200002",1900, 1);
-        ObjectName objectName = new ObjectName("Jaś i Małgosia", jasImalgosia);
-        jasImalgosia.setObjectName(objectName);
+        //ObjectName objectName = new ObjectName("Jaś i Małgosia", jasImalgosia);
+        //jasImalgosia.setObjectName(objectName);
+        int amountOfBook = jasImalgosia.getAmountOfBook();
+        int newAmountOfBook = amountOfBook - 1;
+
         userService.saveUser(user);
 
         Rental rental = new Rental();
-        rental.setUser(user);
+        //rental.setUser(user);
         rental.setStatus(Status.ACTIVE);
         rental.setTitle("Jaś i Małgosia");
         rental.setAmountOfBorrowedBooks(1);
+        rental.setBook(jasImalgosia);
         user.getBorrowedBooks().add(rental);
-        jasImalgosia.getBorrowedBooks().add(rental);
+        //jasImalgosia.getBorrowedBooks().add(rental);
+        jasImalgosia.setAmountOfBook(newAmountOfBook);
+
 
         //When
         bookService.saveBook(jasImalgosia);
-        userService.saveUser(user);
+        rentalService.saveRental(rental);
+
 
         List<Rental> rentals = rentalService.getRentals("Martyna");
         Optional<Rental> rentalId = rentalService.getRental(rental.getId());
@@ -80,8 +88,11 @@ public class RentalServiceTest {
         Assert.assertNotEquals(0, jasimalgosiaId.get());
         //CleanUp
         try {
-            bookService.deleteBook(jasImalgosia.getId());
+
+            rentalService.deleteRental(rental.getId());
             userService.deleteUser(user.getId());
+            bookService.deleteBook(jasImalgosia.getId());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -92,14 +103,13 @@ public class RentalServiceTest {
         //Given
         User user = new User("Maria", "123", "maria@gmail.com", "USER");
         Book jasImalgosia = new Book("Jaś i Małgosia","200002",1900, 1);
-        ObjectName objectName = new ObjectName("Jaśi Małgosia", jasImalgosia);
+        ObjectName objectName = new ObjectName("Jaś i Małgosia", jasImalgosia);
         jasImalgosia.setObjectName(objectName);
         userService.saveUser(user);
 
         int amountOfBook = jasImalgosia.getAmountOfBook();
         int newAmountOfBook = amountOfBook - 1;   //0
         jasImalgosia.setAmountOfBook(newAmountOfBook);
-        long count= jasImalgosia.getBorrowedBooks().stream().map(rental1 -> rental1.getAmountOfBorrowedBooks()).count();
 
         Rental rental = new Rental(
                 jasImalgosia.getTitle(),
@@ -107,26 +117,31 @@ public class RentalServiceTest {
                 LocalDate.now().plusDays(30),
                 1,
                 Status.ACTIVE);
-               // user);
+               //user);
         //When
+        rental.setBook(jasImalgosia);
         user.getBorrowedBooks().add(rental);
-        jasImalgosia.getBorrowedBooks().add(rental);
+        //jasImalgosia.getBorrowedBooks().add(rental);
         bookService.saveBook(jasImalgosia);
+        rentalService.saveRental(rental);
         userService.saveUser(user);
 
-        long countNew = jasImalgosia.getBorrowedBooks().stream().
-                map(rental1 -> rental1.getAmountOfBorrowedBooks()).count();
+        //long countNew = jasImalgosia.getBorrowedBooks().stream().
+                //map(rental1 -> rental1.getAmountOfBorrowedBooks()).count();
 
-        Long rentalId = rental.getId();
-
+        Optional<Rental> rentalId = rentalService.getRental(rental.getId());
+        Optional<Book>jasimalgosiaId = bookService.getBook(jasImalgosia.getId());
         //Then
-         Assert.assertNotEquals(Optional.of(0), rentalId);
-         Assert.assertTrue(countNew > count);
+        Assert.assertNotEquals(Optional.of(0), rentalId);
+        Assert.assertNotEquals(Optional.of(0), jasimalgosiaId);
+
+         Assert.assertTrue(amountOfBook > newAmountOfBook);
 
         //CleanUp
         try {
-            bookService.deleteBook(jasImalgosia.getId());
+            rentalService.deleteRental(rental.getId());
             userService.deleteUser(user.getId());
+            bookService.deleteBook(jasImalgosia.getId());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -136,17 +151,26 @@ public class RentalServiceTest {
     public void testCheckoutBook() throws Exception { //ok
         //Given
         Book jasImalgosia = new Book("Jaś i Małgosia","200002",1900, 1);
-        ObjectName objectName = new ObjectName("Jaśi Małgosia", jasImalgosia);
+        ObjectName objectName = new ObjectName("Jaś i Małgosia", jasImalgosia);
         jasImalgosia.setObjectName(objectName);
         bookService.saveBook(jasImalgosia);
         BookDto bookDto = bookMapper.mapToBookDto(jasImalgosia);
         String username = "Martyna";
+        Optional<User> userId = userRepository.findByUsername("Martyna");
         //When
 
         boolean ischeckout = rentalService.checkoutBook(bookDto,username);
+
+        Optional<Rental> rental = rentalRepository.findRentalByTitleAndUser(userId.get().getId(),bookDto.getTitle());
         //Then
         Assert.assertTrue(ischeckout);
+
+        // List<Rental>rental = rentalRepository.findRentalForUser(userId.get().getId());
+
+
         //CleanUp
+        rentalService.deleteRental(rental.get().getId());
+        bookService.deleteBook(jasImalgosia.getId());
         //bookService.deleteBook(jasImalgosia.getId());
     }
     @Test
@@ -156,31 +180,36 @@ public class RentalServiceTest {
         Book jasImalgosia = new Book("Jaś i Małgosia","200002",1900, 2);
         ObjectName objectName = new ObjectName("Jaś i Małgosia", jasImalgosia);
         jasImalgosia.setObjectName(objectName);
-        userService.saveUser(user);
+        //userService.saveUser(user);
+        bookService.saveBook(jasImalgosia);
 
         Rental rental = new Rental();
-        rental.setUser(user);
+        //rental.setUser(user);
         rental.setStatus(Status.ACTIVE);
         rental.setTitle("Jaś i Małgosia");
         rental.setAmountOfBorrowedBooks(1);
+        rental.setBook(jasImalgosia);
         user.getBorrowedBooks().add(rental);
-        jasImalgosia.getBorrowedBooks().add(rental);
-        bookService.saveBook(jasImalgosia);
+        //jasImalgosia.getBorrowedBooks().add(rental);
         userService.saveUser(user);
+        rentalService.saveRental(rental);
         //When
         Optional<Rental> rentalId = rentalService.getRental(rental.getId());
         List<Rental> rentalsForUser = rentalService.getRentals(user.getUsername());
         List<Rental> rentals = rentalService.getAllRentals();
-        List<Rental> rentalsForBook =  jasImalgosia.getBorrowedBooks();
+        //List<Rental> rentalsForBook =  jasImalgosia.getBorrowedBooks();
         //Then
         Assert.assertNotNull(rentalId);
         Assert.assertNotEquals(0, rentalsForUser.size());
         Assert.assertNotEquals(0, rentals.size());
-        Assert.assertNotEquals(0, rentalsForBook.size());
+        //Assert.assertNotEquals(0, rentalsForBook.size());
         //CleanUp
         try {
-            bookService.deleteBook(jasImalgosia.getId());
+            rentalService.deleteRental(rental.getId());
             userService.deleteUser(user.getId());
+            bookService.deleteBook(jasImalgosia.getId());
+
+
         } catch (Exception e) {
             //nothing
         }
@@ -188,22 +217,23 @@ public class RentalServiceTest {
     }
 
     @Test
-    public void deleteRental() throws InvalidClassException {//ok
+    public void deleteRental() throws InvalidClassException {//
         //Given
         User user = new User("Maria", "123", "maria@gmail.com", "USER");
         Book las = new Book("Las","200009",1900, 1);
         ObjectName objectName = new ObjectName("Las", las);
         las.setObjectName(objectName);
-        userService.saveUser(user);
+        bookService.saveBook(las);
 
         Rental rental = new Rental();
-        rental.setUser(user);
+        //rental.setUser(user);
         rental.setStatus(Status.ACTIVE);
         rental.setTitle("Las");
         rental.setAmountOfBorrowedBooks(1);
-        las.getBorrowedBooks().add(rental);
+        rental.setBook(las);
+        //las.getBorrowedBooks().add(rental);
         user.getBorrowedBooks().add(rental);
-        bookService.saveBook(las);
+
         userService.saveUser(user);
         rentalService.saveRental(rental);
         List<Rental> rentalslist = rentalService.getAllRentals();

@@ -81,7 +81,7 @@ public class Book {
 
     private List<BookTag> bookTags = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
-    private List<Rental> borrowedBooks = new ArrayList<>();
+   // private List<Rental> borrowedBooks = new ArrayList<>();
 
     public Book(Long id,String title, int yearOfPublication, int amountOfBook, String signature, List<BookTag> bookTags,List<Author> authors) {
         this.id = id;
@@ -126,19 +126,19 @@ public class Book {
         return signature;
     }
     //@LazyCollection(LazyCollectionOption.FALSE)
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "OBJECT_NAME_ID", unique = true) //
     public ObjectName getObjectName() {
       return objectName;
     }
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(
-            cascade = {CascadeType.ALL})
-    @JoinColumn(name = "BOOK_ID")//,//referencedColumnName = "id",unique = true)//tu zmieniam
-    public List<Rental> getBorrowedBooks() {
-        return borrowedBooks;
-    }  //tu zmieniam
+    //@LazyCollection(LazyCollectionOption.FALSE)
+    //@OneToMany(
+          //  cascade = {CascadeType.ALL})
+   // @JoinColumn(name = "BOOK_ID")
+   // public List<Rental> getBorrowedBooks() {
+       // return borrowedBooks;
+  //  }
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
@@ -195,10 +195,6 @@ public class Book {
 
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
-    }
-
-    public void setBorrowedBooks(List<Rental> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
     }
 
 

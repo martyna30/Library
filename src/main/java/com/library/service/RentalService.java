@@ -22,7 +22,7 @@ import javax.transaction.Transactional;
 import java.io.InvalidClassException;
 import java.time.LocalDate;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,6 +33,8 @@ public class RentalService {
     RentalRepository rentalRepository;
     @Autowired
     BooksRepository booksRepository;
+    @Autowired
+    RentalService rentalService;
     @Autowired
     BookService bookService;
     @Autowired
@@ -73,54 +75,69 @@ public class RentalService {
     @Transactional()
     public boolean checkoutBook(BookDto bookDto, String username) throws UnexpectedRollbackException {
         Book book = bookMapper.mapToBook(bookDto);
+
         Optional<User> userOptional = userRepository.findByUsername(username);
-        Optional<String> titleExistForUser = userOptional.get()
-                .getBorrowedBooks().stream().map(rental -> rental.getTitle())
-                .filter(s -> s.equals(book.getTitle())).findFirst();
+        //Optional<String> titleExistForUser = userOptional.get()
+               //.getBorrowedBooks().stream().map(rental -> rental.getTitle())
+               //.filter(s -> s.equals(book.getTitle())).findFirst();
+        //Optional<Rental> rentalForUser = rentalRepository.findRentalByTitleAndUser(book.getTitle(),userOptional.get().getId());
+
         long countBorrowed = 0;
         long newCountOfBorrowed = 0;
 
         int amountOfBook = book.getAmountOfBook();
         int newAmountOfBook = amountOfBook - 1;
-        countBorrowed = book.getBorrowedBooks().stream().count();
-        try {
-            if (titleExistForUser.isPresent()) {
-                Optional<Rental> rentalForUser = rentalRepository.findRentalByTitle(book.getTitle());
-                if (rentalForUser.isPresent()) {
+        //countBorrowed = book.getBorrowedBooks().stream().count();
 
-                    countBorrowed = rentalForUser.get().getAmountOfBorrowedBooks();
+        try {
+            //if (titleExistForUser.isPresent()) {
+               // List<Rental> rentalForUser = userOptional.get().getBorrowedBooks();
+               // Optional<Rental> rentalForUser = rentalRepository.findRentalUser(userOptional.get().getId());
+              //  if (rentalForUser.isPresent()) {
+
+                   /* countBorrowed = rentalForUser.get().getAmountOfBorrowedBooks();
                     newCountOfBorrowed = countBorrowed + 1;
                     rentalForUser.get().setTitle(book.getTitle());
                     rentalForUser.get().setStartingDate(LocalDate.now());
                     rentalForUser.get().setFinishDate(LocalDate.now().plusDays(30));
                     rentalForUser.get().setAmountOfBorrowedBooks((int) newCountOfBorrowed);
                     rentalForUser.get().setStatus(Status.ACTIVE);
-                    book.getBorrowedBooks().add(rentalForUser.get());
+                    rentalForUser.get().setUser(userOptional.get());
+                    //book.getBorrowedBooks().add(rentalForUser.get());
+                    rentalForUser.get().setBook(book);
                     book.setAmountOfBook(newAmountOfBook);
                     userOptional.get().getBorrowedBooks().add(rentalForUser.get());
                     bookService.saveBook(book);
                     //newCountOfBorrowed = book.getBorrowedBooks().stream().map(rentals -> rentals.getAmountOfBorrowedBooks()).count();
-                }
-            } else {
-                countBorrowed = book.getBorrowedBooks().stream().map(rental -> rental.getAmountOfBorrowedBooks()).count();
-                newCountOfBorrowed = countBorrowed + 1;
-                Rental rental = new Rental();
-                rental.setTitle(book.getTitle());
-                rental.setStartingDate(LocalDate.now());
-                rental.setFinishDate(LocalDate.now().plusDays(30));
-                rental.setAmountOfBorrowedBooks((int) newCountOfBorrowed);
-                rental.setStatus(Status.ACTIVE);
+                }*/
+           // }else {
+                    //countBorrowed = book.getBorrowedBooks().stream().map(rental -> rental.getAmountOfBorrowedBooks()).count();
+                    newCountOfBorrowed = countBorrowed + 1;
+                    Rental rental = new Rental();
+                    rental.setTitle(book.getTitle());
+                    rental.setStartingDate(LocalDate.now());
+                    rental.setFinishDate(LocalDate.now().plusDays(30));
+                    rental.setAmountOfBorrowedBooks((int) newCountOfBorrowed);
+                    rental.setStatus(Status.ACTIVE);
 
-                book.getBorrowedBooks().add(rental);
-                book.setAmountOfBook(newAmountOfBook);
-                userOptional.get().getBorrowedBooks().add(rental);
-                bookService.saveBook(book);
-               // newCountOfBorrowed = book.getBorrowedBooks().stream().map(rental1 -> rental1.getAmountOfBorrowedBooks()).count();
-            }
-        } catch (InvalidClassException e) {
-            throw new RuntimeException(e);
+                    //rental.setUser(userOptional.get());
+                    book.setAmountOfBook(newAmountOfBook);
+                    rental.setBook(book);
+                    //book.getBorrowedBooks().add(rental);
+                    userOptional.get().getBorrowedBooks().add(rental);
+
+
+                    bookService.saveBook(book);
+                    rentalService.saveRental(rental);
+                    // newCountOfBorrowed = book.getBorrowedBooks().stream().map(rental1 -> rental1.getAmountOfBorrowedBooks()).count();
         } catch (UnexpectedRollbackException e) {
             LOGGER.info(e.getMessage());
+       // } catch (InvalidClassException e) {
+            throw new RuntimeException(e);
+        //} catch (InvalidClassException e) {
+           // throw new RuntimeException(e);
+        } catch (InvalidClassException e) {
+            throw new RuntimeException(e);
         }
         return newCountOfBorrowed > countBorrowed ? true : false;
     }
@@ -129,7 +146,8 @@ public class RentalService {
         List<Rental> rentals = new ArrayList<>();
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
-            rentals = userOptional.get().getBorrowedBooks();
+            //rentals = userOptional.get().getBorrowedBooks();
+            rentals = rentalRepository.findRentalForUser(userOptional.get().getId());
         } else {
             System.out.println("User doesn't exist");
         }

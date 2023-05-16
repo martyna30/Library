@@ -108,40 +108,33 @@ public class RentalControllerTest {
         RentalDto rentalDto = new RentalDto();
         rentalDto.setId(id);
 
-        when(rentalController.createRental(any(RentalDto.class))).thenReturn(rentalDto);
-
         //when
-        RentalDto rentalDtoResult = rentalController.createRental(rentalDto);
+        ResponseEntity<RentalDto> responseEntity  = rentalController.createRental(rentalDto);
 
         //then
-        Assert.assertNotNull(rentalDtoResult);
-        Assert.assertEquals(rentalDtoResult.getId(), rentalDto.getId());
-        Assert.assertTrue(rentalDtoResult.equals(rentalDto));
+        Assert.assertNotNull(responseEntity);
+        Assert.assertEquals(201, responseEntity.getStatusCodeValue());
     }
 
     @Test
-    public void testUpdateRental() {
+    public void testUpdateRental() throws Exception {
         //Given
-        RentalDto rentalDto = new RentalDto();
+        Rental rental = new Rental();
         Long id = 1L;
+        rental.setId(id);
+        RentalDto rentalDto = new RentalDto();
         rentalDto.setId(id);
         rentalDto.setTitle("");
         RentalDto modified = new RentalDto();
         modified.setTitle("test");
         modified.setId(id);
-        //When
-        when(rentalController.updateRental(rentalDto)).thenReturn(modified);
-
         //when
-        RentalDto rentalDtoResult = rentalController.updateRental(modified);
+        ResponseEntity<RentalDto> responseEntity = rentalController.updateRental(modified);
 
         //Then
-        Assert.assertNotNull(rentalDtoResult);
+        Assert.assertNotNull(responseEntity);
         Assert.assertEquals("", rentalDto.getTitle());
-        Assert.assertEquals("test", rentalDtoResult.getTitle());
-
-        Assert.assertNotEquals(rentalDtoResult.getTitle(), rentalDto.getTitle());
-        Assert.assertFalse(rentalDtoResult.equals(rentalDto));
+        Assert.assertEquals(201, responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -153,12 +146,12 @@ public class RentalControllerTest {
         bookDto.setId(1L);
 
         //when
-       // ResponseEntity<Object> responseEntity = rentalController.checkoutBook(bookDto,errors,username);
+        ResponseEntity<Object> responseEntity = rentalController.checkoutBook(bookDto,errors,username);
 
         //then
-       // Assert.assertNotNull(responseEntity);
+        Assert.assertNotNull(responseEntity);
         Assert.assertNotNull(bookDto);
-        //Assert.assertEquals(201, responseEntity.getStatusCodeValue());
+        Assert.assertEquals(201, responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -170,7 +163,6 @@ public class RentalControllerTest {
 
         List<RentalDto> rentalDtos = new ArrayList<>();
         RentalDto rentalDto = new RentalDto();
-        rentalDto.setLoggedUserDto(loggedUserDto);
         rentalDtos.add(rentalDto);
 
         List<Rental> rentals = new ArrayList<>();
@@ -185,11 +177,6 @@ public class RentalControllerTest {
         //then
         Assert.assertNotNull(rentalDtosResultList);
         Assert.assertEquals(1, rentalDtosResultList.size());
-        Assert.assertEquals("Test", rentalDtosResultList.stream()
-                .map(rental -> rental.getLoggedUserDto())
-                .map(user -> user.getUsername())
-                .collect(Collectors.joining()));
-
         Assert.assertEquals(rentals.size(), rentalDtosResultList.size());
     }
 

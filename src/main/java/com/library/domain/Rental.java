@@ -14,6 +14,12 @@ import java.time.LocalDate;
         query = "FROM Rental WHERE title LIKE : TITLE AND USER_ID LIKE: USER_ID"
 )*/
 
+/*@NamedQuery(
+
+        name = "Rental.retrieveRentalWithUserId",
+        query = "FROM Rental WHERE user_id LIKE: USER_ID"
+)*/
+
 
 
 @AllArgsConstructor
@@ -29,6 +35,8 @@ public class Rental {
     private int amountOfBorrowedBooks;
     @Enumerated(EnumType.STRING)
     private Status status;
+    //User user;
+    Book book;
 
 
 
@@ -66,6 +74,17 @@ public class Rental {
     public Status getStatus() {
         return status;
     }
+    //@ManyToOne()
+    //@JoinColumn(name = "USER_ID")
+    //public User getUser() {
+       // return user;
+    //}
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "BOOK_ID")
+    public Book getBook() {
+        return book;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -88,5 +107,10 @@ public class Rental {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    public void setBook(Book book) {
+        this.book = book;
     }
 }

@@ -142,11 +142,7 @@ public class SecurityControllerTest {
                 .sign(algorithm);
         String authorization = new String("Bearer ");
         String header = new String(authorization + "" + refresh_token);
-
-        when(jwtToken.generateToken(myUserDetails,request,response)).thenReturn(refresh_token);
-        when(request.getHeader(AUTHORIZATION)).thenReturn(header);
-        when(userService.loadUserByUsername(user.getUsername())).thenReturn(myUserDetails);
-
+        //Then
         Assert.assertNotNull(refresh_token);
     }
     @Test

@@ -17,6 +17,7 @@ import com.mysql.cj.x.protobuf.MysqlxExpr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.InvalidClassException;
@@ -65,18 +67,32 @@ public class RentalController {
 
     @DeleteMapping("deleteRental")
     public ResponseEntity<Object> deleteRental(@RequestParam Long rentalId) {
-        rentalService.deleteRental(rentalId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            rentalService.deleteRental(rentalId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("updateRental")
-    public RentalDto updateRental(@RequestBody RentalDto rentalDto) {
-        return rentalMapper.mapToRentalDto(rentalService.saveRental(rentalMapper.mapToRental(rentalDto)));
+    public ResponseEntity<RentalDto> updateRental(@RequestBody RentalDto rentalDto) throws ResponseStatusException {
+        try {
+            rentalMapper.mapToRentalDto(rentalService.saveRental(rentalMapper.mapToRental(rentalDto)));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @PostMapping("createRental")
-    public RentalDto createRental(@Valid @RequestBody RentalDto rentalDto) {
-       return rentalMapper.mapToRentalDto(rentalService.saveRental(rentalMapper.mapToRental(rentalDto)));
+    public ResponseEntity<RentalDto> createRental(@Valid @RequestBody RentalDto rentalDto) throws ResponseStatusException {
+        try {
+            rentalMapper.mapToRentalDto(rentalService.saveRental(rentalMapper.mapToRental(rentalDto)));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "checkoutBook")
@@ -84,22 +100,21 @@ public class RentalController {
             @Validated(value = {OrderChecks3.class}) @Valid @RequestBody BookDto bookDto,
             Errors errors, @RequestParam String username) throws Exception {
 
-            if (errors.hasErrors()) {
-                Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
+        if (errors.hasErrors()) {
+            Map<String, ArrayList<Object>> errorsMap = new HashMap<>();
 
-                errors.getFieldErrors().stream().forEach(fieldError -> {
-                    String key = fieldError.getField();
-                    if (!errorsMap.containsKey(key)) {
-                        errorsMap.put(key, new ArrayList<>());
-                    }
-                    errorsMap.get(key).add(fieldError.getDefaultMessage());
-                });
-                errorsMap.values().stream().findFirst();
-                return new ResponseEntity<>(errorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            rentalService.processRequest(bookDto, username);
-            // rentalMapper.mapToRentalDtoList(rentalService.checkoutBook(bookDto, username));
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            errors.getFieldErrors().stream().forEach(fieldError -> {
+                String key = fieldError.getField();
+                if (!errorsMap.containsKey(key)) {
+                    errorsMap.put(key, new ArrayList<>());
+                }
+                errorsMap.get(key).add(fieldError.getDefaultMessage());
+            });
+            errorsMap.values().stream().findFirst();
+            return new ResponseEntity<>(errorsMap, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        rentalService.processRequest(bookDto, username);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -107,5 +122,6 @@ public class RentalController {
     public List<RentalDto> getRentalsByUsername(@RequestParam String username) {
         return rentalMapper.mapToRentalDtoList(rentalService.getRentals(username));
     }
+
 
 }

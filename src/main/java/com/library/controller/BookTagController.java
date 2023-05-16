@@ -6,6 +6,7 @@ import com.library.mapper.BookTagMapper;
 import com.library.service.BookTagService;
 import com.library.validationGroup.OrderChecks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -47,8 +48,12 @@ public class BookTagController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "deleteBookTag", consumes = APPLICATION_JSON_VALUE )
     ResponseEntity<?>deleteBookTag(@RequestParam Long bookTagId) {
-        bookTagService.deleteBookTag(bookTagId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            bookTagService.deleteBookTag(bookTagId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateBookTag")

@@ -49,10 +49,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class SecurityController {
     protected final Log logger = LogFactory.getLog(getClass());
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
-
 
     @Autowired
     UserService userService;

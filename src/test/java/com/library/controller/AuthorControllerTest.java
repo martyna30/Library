@@ -198,12 +198,13 @@ public class AuthorControllerTest {
         when(authorService.findAuthorByName(brzechwa.getForename(), brzechwa.getSurname())).thenReturn(Optional.of(brzechwa));
 
         //when
-        Optional<Author> author = authorController.findIdByName(brzechwa.getForename(), brzechwa.getSurname());
+        ResponseEntity<Author> responseEntity = authorController.findAuthorByName(brzechwa.getForename(), brzechwa.getSurname());
 
         //then
-        Assert.assertNotNull(author.get());
+        Assert.assertNotNull(responseEntity);
         Assert.assertNotNull(brzechwa);
         Assert.assertEquals(Optional.of(1L).get(), brzechwa.getId());
+        Assert.assertEquals(200, responseEntity.getStatusCodeValue());
     }
 }
 

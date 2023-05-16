@@ -55,10 +55,8 @@ public class BookController {
     @RequestMapping(method = RequestMethod.GET, value = "getBooksWithSpecifiedTitle")
     public List<BookDto>getBooksWithSpecifiedTitle(@RequestParam String title) {
         return bookMapper.mapToBookDtoList(bookService.getBooksWithSpecifiedTitle(title));
+
     }
-
-
-
 
     @RequestMapping(method = RequestMethod.GET, value = "getBook")
     public BookDto getBook(@RequestParam Long bookId) throws BookNotFoundException {

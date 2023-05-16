@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.ResponseEntity;
 
 import java.io.InvalidClassException;
 import java.util.ArrayList;
@@ -90,21 +91,18 @@ public class ObjectControllerTest {
 
         ObjectNameDto objectNameDto = new ObjectNameDto();
         objectNameDto.setName(objectToSearch);
-
-        when(objectControler.createObjectName(any(ObjectNameDto.class))).thenReturn(objectNameDto);
         //when
-        ObjectNameDto resultObjectName = objectControler.createObjectName(objectNameDto);
+        ResponseEntity<ObjectNameDto> responseEntity = objectControler.createObjectName(objectNameDto);
 
         //then
-        Assert.assertNotNull(resultObjectName);
-        Assert.assertEquals("test", resultObjectName.getName());
-        Assert.assertEquals(objectNameDto.getName(), resultObjectName.getName());
-        Assert.assertTrue(objectNameDto.equals(resultObjectName));
+        Assert.assertNotNull(responseEntity);
+        Assert.assertEquals(201, responseEntity.getStatusCodeValue());
     }
-
-
-
-
-
 }
+
+
+
+
+
+
 

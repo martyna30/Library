@@ -9,6 +9,7 @@ import com.library.validationGroup.OrderChecks;
 import com.library.mapper.AuthorMapper;
 import com.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,8 +61,13 @@ public class AuthorController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "deleteAuthor")
-    public void deleteAuthor(@RequestParam Long authorId) {
-        authorService.deleteAuthor(authorId);
+    public ResponseEntity<?> deleteAuthor(@RequestParam Long authorId) {
+        try {
+            authorService.deleteAuthor(authorId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateAuthor")
@@ -103,8 +109,10 @@ public class AuthorController {
     }
 
     @RequestMapping(method=RequestMethod.GET, value = "findIdByName", consumes = APPLICATION_JSON_VALUE)
-    public Optional<Author>findIdByName(@RequestParam String surname, String forename)  {
-        return authorService.findAuthorByName(surname, forename);
+    public ResponseEntity<Author>findAuthorByName(@RequestParam String surname, String forename)  {
+        return authorService.findAuthorByName(surname, forename)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

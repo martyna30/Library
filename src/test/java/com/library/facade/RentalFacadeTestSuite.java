@@ -42,7 +42,7 @@ public class RentalFacadeTestSuite {
         jasImalgosia.setObjectName(objectName);
         Rental rental = new Rental();
         rental.setTitle("Jaś i Małgosia");
-        jasImalgosia.getBorrowedBooks().add(rental);
+        //jasImalgosia.getBorrowedBooks().add(rental);
         BookDto bookDto = new BookDto();
         String username = "Martyna";
         boolean wasCheckout = true;

@@ -7,6 +7,8 @@ import com.library.exception.ObjectNameNotFoundException;
 import com.library.mapper.ObjectMapper;
 import com.library.service.ObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.InvalidClassException;
@@ -38,7 +40,12 @@ public class ObjectControler {
     }
 
     @PostMapping(value = "createObjectName", consumes = APPLICATION_JSON_VALUE)
-    ObjectNameDto createObjectName(@RequestBody ObjectNameDto objectNameDto) throws InvalidClassException {
-        return objectMapper.mapToObjectDto(objectService.save(objectMapper.mapToObject(objectNameDto)));
+    ResponseEntity<ObjectNameDto> createObjectName(@RequestBody ObjectNameDto objectNameDto) throws InvalidClassException {
+        try {
+            objectMapper.mapToObjectDto(objectService.save(objectMapper.mapToObject(objectNameDto)));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (InvalidClassException e) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 }
